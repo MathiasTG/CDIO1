@@ -1,10 +1,9 @@
-package Start;
+package andet;
 
-import DataTier.IUserDTO;
-import DataTier.UserDTO;
-import LogicTier.IUserDAO;
-import LogicTier.UserDAO;
-import PresentationTier.TUI;
+import data.IUserDAO;
+import data.IUserDTO;
+import data.UserDAO;
+import presentation.TUI;
 
 public class Main {
 

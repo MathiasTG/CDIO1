@@ -1,6 +1,6 @@
-package LogicTier;
+package data;
 
-import DataTier.IUserDTO;
+
 
 public class UserDAO implements IUserDAO {
 

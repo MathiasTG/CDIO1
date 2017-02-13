@@ -1,10 +1,10 @@
-package PresentationTier;
+package presentation;
 
-import LogicTier.IUserDAO;
+import data.IUserDAO;
 
 public class TUI {
 
-	private IUserDAO UserDAO;
+	private ILogic logic;
 	
 	public TUI(IUserDAO UserDAO){
 		this.UserDAO = UserDAO;
