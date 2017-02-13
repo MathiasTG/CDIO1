@@ -6,7 +6,7 @@ import LogicTier.IUserDAO;
 import LogicTier.UserDAO;
 import PresentationTier.TUI;
 
-public class startApp {
+public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
