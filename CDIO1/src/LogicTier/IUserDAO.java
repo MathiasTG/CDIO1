@@ -1,7 +1,7 @@
-package dal;
+package LogicTier;
 import java.util.List;
 
-import dto.UserDTO;
+import DataTier.UserDTO;
 
 public interface IUserDAO {
 

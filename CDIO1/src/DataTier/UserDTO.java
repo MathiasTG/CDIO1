@@ -1,12 +1,12 @@
-package dto;
+package DataTier;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDTO implements Serializable{
+//public class UserDTO implements Serializable{ Hvad er det?? 
+public class UserDTO implements IUserDTO{
 
-	private static final long serialVersionUID = 4545864587995944260L;
+	//private static final long serialVersionUID = 4545864587995944260L; // HVad er det??
 	private int	userId;                     
 	private String userName;                
 	private String ini;                 
