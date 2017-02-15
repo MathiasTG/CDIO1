@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import dal.IUserDAO;
+import exceptions.DALException;
 
 public class UserStore implements IUserDAO {
 		
