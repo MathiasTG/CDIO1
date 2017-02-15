@@ -133,7 +133,7 @@ public class TUI {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void updateUser() {
 		System.out.println("Enter the ID of the user you want to update: ");
 		int id = input.nextInt();
