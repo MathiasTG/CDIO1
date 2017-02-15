@@ -29,7 +29,7 @@ public class TUI {
 				createUser();
 				break;
 			case 2:
-				// showAllUsers();
+				showAllUsers();
 				break;
 			case 3:
 				updateUser();
@@ -84,7 +84,9 @@ public class TUI {
 				else if (roles.get(i) == "Operator")
 					choices.remove("4.\tOperator");
 			}
-			System.out.println(choices.toString());
+			System.out.println("Choose a role to add to the new user:");
+			for(int i=0;i<choices.size();i++)
+				System.out.println(choices.get(i));
 			int choice = input.nextInt();
 			input.nextLine();
 			switch (choice) {
@@ -122,7 +124,14 @@ public class TUI {
 	}
 
 	public void showAllUsers() {
-
+		try {
+			List<UserDTO> users = f.getUserList();
+			for(int i = 0; i<users.size();i++)
+				System.out.println(users.get(i).toString());
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void updateUser() {
@@ -188,7 +197,9 @@ public class TUI {
 								else if (roles.get(i) == "Operator")
 									choices.remove("4.\tOperator");
 							}
-							System.out.println(choices.toString());
+							System.out.println("Choose a role to add to the user:");
+							for(int i=0;i<choices.size();i++)
+								System.out.println(choices.get(i));
 							int subsubchoice = input.nextInt();
 							input.nextLine();
 							switch (subsubchoice) {
@@ -216,11 +227,6 @@ public class TUI {
 					case 2:
 						List<String> roles2 = temp.getRoles();
 						List<String> choices2 = new ArrayList<String>();
-//						choices.add("1.\tAdmin");
-//						choices.add("2.\tPharmacist");
-//						choices.add("3.\tForeman");
-//						choices.add("4.\tOperator");
-//						choices2.add("5.\tRole selection done");
 						while (true) {
 							for (int i = 0; i < roles2.size(); i++) {
 								if (roles2.get(i) == "Admin")
@@ -234,7 +240,9 @@ public class TUI {
 							}
 							choices2.add("5.\tRole selection done");
 							
-							System.out.println(choices2.toString());
+							System.out.println("Choose a role to remove from the user:");
+							for(int i=0;i<choices2.size();i++)
+								System.out.println(choices2.get(i));
 							int subsubchoice = input.nextInt();
 							input.nextLine();
 							switch (subsubchoice) {
