@@ -4,6 +4,7 @@ import java.util.List;
 
 import dal.IUserDAO;
 import dto.UserDTO;
+import exceptions.DALException;
 
 public class logic implements ILogic {
 
@@ -29,7 +30,7 @@ public class logic implements ILogic {
 	@Override
 	public void createUser(UserDTO user) throws DALException {
 		// TODO Auto-generated method stub
-		return userDAO.createUser(user);
+		userDAO.createUser(user);
 	}
 
 	@Override
