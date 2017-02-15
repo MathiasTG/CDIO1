@@ -1,8 +1,7 @@
 package dto;
-import java.util.ArrayList;
 import java.util.List;
-
 import dal.IUserDAO;
+import exceptions.DALException;
 
 public class UserStore implements IUserDAO {
 		
@@ -42,6 +41,9 @@ public class UserStore implements IUserDAO {
 	
 		
 	}
+	
+	
+	
 	
 	
 
