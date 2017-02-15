@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +55,36 @@ public class UserStore implements IUserDAO {
 		
 	}
 	
+	public boolean checkCpr(String cpr){
+		Date date = null;
+		//First try and catch for "-" error 
+		try{
+		String[] parts = cpr.split("-");
+		String dateNumber = parts[0]; //
+		String number = parts[1]; //
+		
+		if(dateNumber.length()==6 && number.length()==4){
+			try {
+				SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+				date = sdf.parse(dateNumber);
+				if (!dateNumber.equals(sdf.format(date))) {
+					return false;
+				}
+				else{
+					return true;
+				}
+			} catch (ParseException ex) {
+				return false;
+			}	
+			
+		}
+		else 
+			return false;
+		
+		}catch (ArrayIndexOutOfBoundsException e){
+			return false;
+		}
+	}
 public static void main( String [] args ) throws IOException  { 
 
 	String aString = "The value of that string";
