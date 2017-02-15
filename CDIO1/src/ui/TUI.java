@@ -44,8 +44,8 @@ public class TUI {
 	}
 
 	public void createUser() {
-		String userName, initials, password;
-		int userID, cpr;
+		String userName, initials, password,cpr;
+		int userID;
 
 		List<String> roles = new ArrayList<String>();
 		List<String> choices = new ArrayList<String>();
@@ -64,8 +64,7 @@ public class TUI {
 		System.out.println("Enter the initials of the new user:");
 		initials = input.nextLine();
 		System.out.println("Enter the CPR number of the new user, as an integer: ");
-		cpr = input.nextInt();
-		input.nextLine();
+		cpr = input.nextLine();
 		System.out.println("Enter a password for the new user: ");
 		password = input.nextLine();
 		System.out.println("Enter the roles of the new user:");
