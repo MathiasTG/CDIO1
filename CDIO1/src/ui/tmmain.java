@@ -1,5 +1,9 @@
 package ui;
 
+import dto.UserStore;
+import logic.ILogic;
+import logic.logic;
+
 public class tmmain {
 
 	public tmmain() {
@@ -7,7 +11,8 @@ public class tmmain {
 	}
 
 	public static void main(String[] args) {
-		TUI t = new TUI();
+		ILogic f=new logic(null);
+		TUI t = new TUI(f);
 		t.menu();
 	}
 
