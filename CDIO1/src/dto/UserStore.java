@@ -7,7 +7,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
+
 import dal.IUserDAO;
 import exceptions.DALException;
 
@@ -82,29 +86,39 @@ public class UserStore implements IUserDAO {
 			return false;
 		}
 	}
-public static void main( String [] args ) throws IOException  { 
+public static void main( String [] args ) { 
+	ArrayList<String> theUser = new ArrayList<String>();
+	theUser.add("Hej");
+	theUser.add("du");
+	theUser.add("Lort");
+	Scanner input = new Scanner(System.in);
+	String lort = input.nextLine();
+	input.close();
+	theUser.add(lort);
 
-	String aString = "The value of that string";
-    int    someInteger = 999;
-   // SS instance = new SS();
-    ObjectOutputStream oos = new ObjectOutputStream( 
-                           new FileOutputStream(new File("UserInfo.ser")));
-	
-	
-	
-
-    // do the magic  
-    oos.writeObject( aString + " " + someInteger );
-    // close the writing.
-    oos.close();
-    ObjectInputStream ois = new ObjectInputStream(
-			new FileInputStream("UserInfo.ser"));
-    try {
-		System.out.println(""+ ois.readObject());
+	try{
+		ObjectOutputStream oos = new ObjectOutputStream(
+								new FileOutputStream(new File("Test.ser")));
+		oos.writeObject(theUser);
+		oos.close();
+	} catch(IOException ioe){
+		ioe.printStackTrace();
+		}
+	ArrayList<String> arraylist = new ArrayList<String>();
+	try {
+		ObjectInputStream ois = new ObjectInputStream(
+				new FileInputStream("Test.ser")
+				);
+		arraylist = (ArrayList) ois.readObject();
+		ois.close();
+	} catch (IOException ioe) {
+		ioe.printStackTrace();
+		return;
 	} catch (ClassNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+	} for(String tmp: arraylist) {
+		System.out.println(tmp);
 	}
-    ois.close();
-    	}
+	}
 }
