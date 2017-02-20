@@ -151,7 +151,7 @@ public class UserStore implements IUserDAO {
 
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == tempID)
-				throw new InvalidIDException("Rrong userID");
+				throw new InvalidIDException("Wrong userID");
 		}
 		String tempName = user.getUserName();
 
