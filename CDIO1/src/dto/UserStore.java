@@ -101,29 +101,35 @@ public class UserStore implements IUserDAO {
 */
 
 	public static void main( String [] args ) throws IOException  { 
-
+		ArrayList<String> theUser = new ArrayList<String>();
+		theUser.add("Hej");
+		theUser.add("du");
+		theUser.add("Lort");
+		theUser.add("Ko");
+//		Scanner input = new Scanner(System.in);
+//		String lort = input.nextLine();
+//		input.close();
+//		theUser.add(lort);
 		String aString = "The value of that string";
 		int    someInteger = 999;
 		// SS instance = new SS();
-		ObjectOutputStream oos = new ObjectOutputStream( 
-				new FileOutputStream(new File("UserInfo.ser")));
-
-
-
-
-		// do the magic  
-		oos.writeObject( aString + " " + someInteger );
-		// close the writing.
-		oos.close();
-		ObjectInputStream ois = new ObjectInputStream(
-				new FileInputStream("UserInfo.ser"));
-		try {
-			System.out.println(""+ ois.readObject());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ois.close();
+//		ObjectOutputStream oos = new ObjectOutputStream( 
+//				new FileOutputStream(new File("UserInfo.ser")));
+//
+//
+//		// do the magic  
+//		oos.writeObject( theUser );
+//		// close the writing.
+//		oos.close();
+//		ObjectInputStream ois = new ObjectInputStream(
+//				new FileInputStream("UserInfo.ser"));
+////		try {
+////			System.out.println(""+ ois.readObject());
+////		} catch (ClassNotFoundException e) {
+////			// TODO Auto-genersated catch block
+////			e.printStackTrace();
+////		}
+////		ois.close();
 //	try{
 //		ObjectOutputStream oos = new ObjectOutputStream(
 //								new FileOutputStream(new File("Test.ser")));
@@ -132,21 +138,21 @@ public class UserStore implements IUserDAO {
 //	} catch(IOException ioe){
 //		ioe.printStackTrace();
 //		}
-//	ArrayList<String> arraylist = new ArrayList<String>();
-//	try {
-//		ObjectInputStream ois = new ObjectInputStream(
-//				new FileInputStream("Test.ser")
-//				);
-//		arraylist = (ArrayList) ois.readObject();
-//		ois.close();
-//	} catch (IOException ioe) {
-//		ioe.printStackTrace();
-//		return;
-//	} catch (ClassNotFoundException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} for(String tmp: arraylist) {
-//		System.out.println(tmp);
-//	}
+	ArrayList<String> arraylist = new ArrayList<String>();
+	try {
+		ObjectInputStream ois = new ObjectInputStream(
+				new FileInputStream("Test.ser")
+				);
+		arraylist = (ArrayList) ois.readObject();
+		ois.close();
+	} catch (IOException ioe) {
+		ioe.printStackTrace();
+		return;
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} for(String tmp: arraylist) {
+		System.out.println(tmp);
+	}
 	}
 }
