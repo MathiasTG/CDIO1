@@ -19,6 +19,7 @@ public class DBTester {
 		newUser.addRole("Admin");
 		newUser.setUserName("testName");
 		newUser.setUserId(0);
+		
 		try {
 			iDAO.createUser(newUser);
 		} catch (DALException e) {
