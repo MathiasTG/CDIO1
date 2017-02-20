@@ -1,5 +1,20 @@
 package dto;
 
+import java.util.List;
+
+public class UserStore {
+	
+	private List<String> users;
+	
+	
+	public UserStore () {
+		
+	}
+
+
+}
+package dto;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,7 +25,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import java.util.Scanner;
 
 import dal.IUserDAO;
 import exceptions.DALException;
@@ -100,13 +119,38 @@ public class UserStore implements IUserDAO {
 		}
 	}
 
+<<<<<<< HEAD
 	public static void main(String[] args) throws IOException {
 
+=======
+/*public static void main( String [] args ) { 
+	ArrayList<String> theUser = new ArrayList<String>();
+	theUser.add("Hej");
+	theUser.add("du");
+	theUser.add("Lort");
+	Scanner input = new Scanner(System.in);
+	String lort = input.nextLine();
+	input.close();
+	theUser.add(lort);
+*/
+
+	public static void main( String [] args ) throws IOException  { 
+		ArrayList<String> theUser = new ArrayList<String>();
+		theUser.add("Hej");
+		theUser.add("du");
+		theUser.add("Lort");
+		theUser.add("Ko");
+//		Scanner input = new Scanner(System.in);
+//		String lort = input.nextLine();
+//		input.close();
+//		theUser.add(lort);
+>>>>>>> branch 'master' of https://github.com/MathiasTG/CDIO1.git
 		String aString = "The value of that string";
 		int someInteger = 999;
 		String aString2 = " jlndasf ";
 
 		// SS instance = new SS();
+<<<<<<< HEAD
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
 
 		// do the magic
@@ -124,6 +168,48 @@ public class UserStore implements IUserDAO {
 			e.printStackTrace();
 		}
 
+=======
+//		ObjectOutputStream oos = new ObjectOutputStream( 
+//				new FileOutputStream(new File("UserInfo.ser")));
+//
+//
+//		// do the magic  
+//		oos.writeObject( theUser );
+//		// close the writing.
+//		oos.close();
+//		ObjectInputStream ois = new ObjectInputStream(
+//				new FileInputStream("UserInfo.ser"));
+////		try {
+////			System.out.println(""+ ois.readObject());
+////		} catch (ClassNotFoundException e) {
+////			// TODO Auto-genersated catch block
+////			e.printStackTrace();
+////		}
+////		ois.close();
+//	try{
+//		ObjectOutputStream oos = new ObjectOutputStream(
+//								new FileOutputStream(new File("Test.ser")));
+//		oos.writeObject(theUser);
+//		oos.close();
+//	} catch(IOException ioe){
+//		ioe.printStackTrace();
+//		}
+	ArrayList<String> arraylist = new ArrayList<String>();
+	try {
+		ObjectInputStream ois = new ObjectInputStream(
+				new FileInputStream("Test.ser")
+				);
+		arraylist = (ArrayList) ois.readObject();
+>>>>>>> branch 'master' of https://github.com/MathiasTG/CDIO1.git
 		ois.close();
+	} catch (IOException ioe) {
+		ioe.printStackTrace();
+		return;
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} for(String tmp: arraylist) {
+		System.out.println(tmp);
+	}
 	}
 }
