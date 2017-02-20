@@ -85,6 +85,16 @@ public class UserStore implements IUserDAO {
 		}
 	}
 
+public static void main( String [] args ) { 
+	ArrayList<String> theUser = new ArrayList<String>();
+	theUser.add("Hej");
+	theUser.add("du");
+	theUser.add("Lort");
+	Scanner input = new Scanner(System.in);
+	String lort = input.nextLine();
+	input.close();
+	theUser.add(lort);
+
 
 	public static void main( String [] args ) throws IOException  { 
 
@@ -110,5 +120,29 @@ public class UserStore implements IUserDAO {
 			e.printStackTrace();
 		}
 		ois.close();
+	try{
+		ObjectOutputStream oos = new ObjectOutputStream(
+								new FileOutputStream(new File("Test.ser")));
+		oos.writeObject(theUser);
+		oos.close();
+	} catch(IOException ioe){
+		ioe.printStackTrace();
+		}
+	ArrayList<String> arraylist = new ArrayList<String>();
+	try {
+		ObjectInputStream ois = new ObjectInputStream(
+				new FileInputStream("Test.ser")
+				);
+		arraylist = (ArrayList) ois.readObject();
+		ois.close();
+	} catch (IOException ioe) {
+		ioe.printStackTrace();
+		return;
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} for(String tmp: arraylist) {
+		System.out.println(tmp);
+	}
 	}
 }
