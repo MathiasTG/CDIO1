@@ -72,8 +72,8 @@ public class UserStore implements IUserDAO {
 
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
-		
-		return null;
+		loadInfo();
+		return users;
 	}
 
 	@Override
@@ -100,12 +100,26 @@ public class UserStore implements IUserDAO {
 
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
-
+		checkUser(user);
+		loadInfo();
+		for(int i=0;i<users.size();i++){
+			if(user.getUserID()==users.get(i).getUserID()){
+				users.remove(i);
+				users.add(user);
+			}
+		}
+		saveInfo();
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DALException {
-
+		loadInfo();
+		for(int i=0;i<users.size();i++){
+			if(userId==users.get(i).getUserID()){
+				users.remove(i);
+			}
+		}
+		saveInfo();
 	}
 
 	public boolean checkCpr(String cpr) {
