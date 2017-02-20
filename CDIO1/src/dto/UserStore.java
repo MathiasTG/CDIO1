@@ -73,38 +73,47 @@ public class UserStore implements IUserDAO {
 
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
-
-		return null;
+		loadInfo();
+		return users;
+		
 	}
 
 	@Override
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
-
-		// if(tempID== users[i])
-		// throw new InvalidIDException("Du har valgt et forkert ID");
-		// }
-		//
-		//
-		// if(checkCpr(user.getCpr())){
-		// System.out.println("");
-		//
-		// }else {
-		// throw new InvalidCPRException("Forkert CPR");
-		// }
-		//
-		//
+		checkUser(user);
+		users.add(user);
+		saveInfo();
 	}
 
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
-
+		//checkUser(user);
+		loadInfo();
+		for(int i=0;i<users.size();i++){
+			if(user.getUserID()==users.get(i).getUserID()){
+				users.remove(i);
+				users.add(user);
+			}
+		}
+		saveInfo();
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DALException {
-
+		loadInfo();
+		boolean found=false;
+		for(int i=0;i<users.size();i++){
+			if(userId==users.get(i).getUserID()){
+				found=true;
+			}
+		}
+		if(found==true){
+			users.remove(userId);
+			saveInfo();
+		}else
+			throw new UserNotFoundException("No user was found with id: "+userId);
 	}
 
 	public boolean checkCpr(String cpr) {

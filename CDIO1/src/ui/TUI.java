@@ -142,38 +142,32 @@ public class TUI {
 			UserDTO temp = f.getUser(id);
 			while (true) {
 				System.out.println("Which attribute do you want to update?");
-				System.out.println("1.\tID");
-				System.out.println("2.\tUsername");
-				System.out.println("3.\tInitials");
-				System.out.println("4.\tCPR number");
-				System.out.println("5.\tPassword");
-				System.out.println("6.\tRoles");
-				System.out.println("7.\tEnd update");
+				System.out.println("1.\tUsername");
+				System.out.println("2.\tInitials");
+				System.out.println("3.\tCPR number");
+				System.out.println("4.\tPassword");
+				System.out.println("5.\tRoles");
+				System.out.println("6.\tEnd update");
 				int choice = input.nextInt();
 				input.nextLine();
 				switch (choice) {
 				case 1:
-					System.out.println("Enter the new ID of the user, as an integer between 11 and 99:");
-					temp.setUserId(input.nextInt());
-					input.nextLine();
-					break;
-				case 2:
 					System.out.println("Enter the new name of the user:");
 					temp.setUserName(input.nextLine());
 					break;
-				case 3:
+				case 2:
 					System.out.println("Enter the new initials of the user:");
 					temp.setIni(input.nextLine());
 					break;
-				case 4:
+				case 3:
 					System.out.println("Enter the new CPR of the user:");
 					temp.setCpr(input.nextLine());
 					break;
-				case 5:
+				case 4:
 					System.out.println("Enter the new password of the user:");
 					temp.setPassword(input.nextLine());
 					break;
-				case 6:
+				case 5:
 					System.out.println("Do you want to add or delete roles?\n1.\tAdd roles\n2.\tDelete roles");
 					int subchoice = input.nextInt();
 					input.nextLine();
@@ -275,10 +269,10 @@ public class TUI {
 						break;
 					}
 				default:
-					if(choice==7){
+					if(choice==6){
 						break;
 					}
-					System.out.println("Invalid input. Enter 1-7");
+					System.out.println("Invalid input. Enter 1-6");
 					break;
 				}
 			}
