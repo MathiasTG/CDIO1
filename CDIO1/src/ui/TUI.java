@@ -103,10 +103,10 @@ public class TUI {
 				roles.add("Operator");
 				break;
 			default:
+				if (choice == 5)
+					break;
 				System.out.println("Invalid input. Enter 1-5.");
 			}
-			if (choice == 5)
-				break;
 		}
 		// UserDTO temp = new UserDTO(userID, userName, initials, cpr, password,
 		// roles);
@@ -268,17 +268,17 @@ public class TUI {
 						}
 						break;
 					default:
+						if(subchoice==3){
+							break;
+						}
 						System.out.println("Invalid input. Enter 1-3.");
 						break;
 					}
-					if(subchoice==3){
+				default:
+					if(choice==7){
 						break;
 					}
-				default:
 					System.out.println("Invalid input. Enter 1-7");
-					break;
-				}
-				if(choice==7){
 					break;
 				}
 			}

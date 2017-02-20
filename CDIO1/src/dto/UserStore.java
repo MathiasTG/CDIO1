@@ -1,20 +1,5 @@
 package dto;
 
-import java.util.List;
-
-public class UserStore {
-	
-	private List<String> users;
-	
-	
-	public UserStore () {
-		
-	}
-
-
-}
-package dto;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,21 +25,61 @@ public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
 	private String theString = "The value of that string";
-	private int someInteger = 0;
+	private int    someInteger = 0;
 
 	public UserStore() {
 
+
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public void loadInfo(){
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(
+					new FileInputStream("UserInfo.ser"));
+			users = (ArrayList<UserDTO>) ois.readObject();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveInfo(){
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream( 
+					new FileOutputStream(new File("UserInfo.ser")));
+			oos.writeObject(users);
+			// close the writing.
+			oos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
-
-		return null;
+		loadInfo();
+		for(int i=0;i<users.size();i++){
+			if(users.get(i).getUserID()==userId){
+				return users.get(i);
+			}
+		}
+		throw new UserNotFoundException("No user has been found with id: "+userId);
 	}
 
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
-
+		
 		return null;
 	}
 
@@ -114,102 +139,8 @@ public class UserStore implements IUserDAO {
 			} else
 				return false;
 
-		} catch (ArrayIndexOutOfBoundsException e) {
+		}catch (ArrayIndexOutOfBoundsException e){
 			return false;
 		}
-	}
-
-<<<<<<< HEAD
-	public static void main(String[] args) throws IOException {
-
-=======
-/*public static void main( String [] args ) { 
-	ArrayList<String> theUser = new ArrayList<String>();
-	theUser.add("Hej");
-	theUser.add("du");
-	theUser.add("Lort");
-	Scanner input = new Scanner(System.in);
-	String lort = input.nextLine();
-	input.close();
-	theUser.add(lort);
-*/
-
-	public static void main( String [] args ) throws IOException  { 
-		ArrayList<String> theUser = new ArrayList<String>();
-		theUser.add("Hej");
-		theUser.add("du");
-		theUser.add("Lort");
-		theUser.add("Ko");
-//		Scanner input = new Scanner(System.in);
-//		String lort = input.nextLine();
-//		input.close();
-//		theUser.add(lort);
->>>>>>> branch 'master' of https://github.com/MathiasTG/CDIO1.git
-		String aString = "The value of that string";
-		int someInteger = 999;
-		String aString2 = " jlndasf ";
-
-		// SS instance = new SS();
-<<<<<<< HEAD
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
-
-		// do the magic
-		oos.writeObject(aString + aString2);
-		// close the writing.
-		oos.close();
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
-		try {
-			System.out.println("" + ois.readObject());
-			String[] users = new String[2];
-			users = (String[]) ois.readObject();
-			System.out.println(users.toString());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-=======
-//		ObjectOutputStream oos = new ObjectOutputStream( 
-//				new FileOutputStream(new File("UserInfo.ser")));
-//
-//
-//		// do the magic  
-//		oos.writeObject( theUser );
-//		// close the writing.
-//		oos.close();
-//		ObjectInputStream ois = new ObjectInputStream(
-//				new FileInputStream("UserInfo.ser"));
-////		try {
-////			System.out.println(""+ ois.readObject());
-////		} catch (ClassNotFoundException e) {
-////			// TODO Auto-genersated catch block
-////			e.printStackTrace();
-////		}
-////		ois.close();
-//	try{
-//		ObjectOutputStream oos = new ObjectOutputStream(
-//								new FileOutputStream(new File("Test.ser")));
-//		oos.writeObject(theUser);
-//		oos.close();
-//	} catch(IOException ioe){
-//		ioe.printStackTrace();
-//		}
-	ArrayList<String> arraylist = new ArrayList<String>();
-	try {
-		ObjectInputStream ois = new ObjectInputStream(
-				new FileInputStream("Test.ser")
-				);
-		arraylist = (ArrayList) ois.readObject();
->>>>>>> branch 'master' of https://github.com/MathiasTG/CDIO1.git
-		ois.close();
-	} catch (IOException ioe) {
-		ioe.printStackTrace();
-		return;
-	} catch (ClassNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} for(String tmp: arraylist) {
-		System.out.println(tmp);
-	}
 	}
 }
