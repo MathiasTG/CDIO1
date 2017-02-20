@@ -1,17 +1,20 @@
 package dto;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.UserNotFoundException;
 
 public class UserStore implements IUserDAO {
 
@@ -23,16 +26,55 @@ public class UserStore implements IUserDAO {
 
 
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public void loadInfo(){
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(
+					new FileInputStream("UserInfo.ser"));
+			users = (ArrayList<UserDTO>) ois.readObject();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveInfo(){
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream( 
+					new FileOutputStream(new File("UserInfo.ser")));
+			oos.writeObject(users);
+			// close the writing.
+			oos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
-
-		return null;
+		loadInfo();
+		for(int i=0;i<users.size();i++){
+			if(users.get(i).getUserID()==userId){
+				return users.get(i);
+			}
+		}
+		throw new UserNotFoundException("No user has been found with id: "+userId);
 	}
 
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
-
+		
 		return null;
 	}
 
@@ -83,32 +125,5 @@ public class UserStore implements IUserDAO {
 		}catch (ArrayIndexOutOfBoundsException e){
 			return false;
 		}
-	}
-
-
-	public static void main( String [] args ) throws IOException  { 
-
-		String aString = "The value of that string";
-		int    someInteger = 999;
-		// SS instance = new SS();
-		ObjectOutputStream oos = new ObjectOutputStream( 
-				new FileOutputStream(new File("UserInfo.ser")));
-
-
-
-
-		// do the magic  
-		oos.writeObject( aString + " " + someInteger );
-		// close the writing.
-		oos.close();
-		ObjectInputStream ois = new ObjectInputStream(
-				new FileInputStream("UserInfo.ser"));
-		try {
-			System.out.println(""+ ois.readObject());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ois.close();
 	}
 }

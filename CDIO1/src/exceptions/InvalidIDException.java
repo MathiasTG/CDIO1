@@ -2,7 +2,7 @@ package exceptions;
 
 import dto.UserDTO;
 
-public class InvalidIDException extends Exception{
+public class InvalidIDException extends DALException{
 	private static final long serialVersionUID = 7355418246336739232L;
 	private UserDTO current;
 	public InvalidIDException(String msg) {
