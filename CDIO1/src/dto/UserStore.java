@@ -2,31 +2,24 @@ package dto;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import java.util.Scanner;
 
 import dal.IUserDAO;
 import exceptions.DALException;
-import exceptions.InvalidCPRException;
-import exceptions.InvalidIDException;
+import exceptions.UserNotFoundException;
 
 public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
-	private String theString = "The value of that string";
-	private int    someInteger = 0;
-
 	public UserStore() {
 
 
