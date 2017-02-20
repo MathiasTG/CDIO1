@@ -2,7 +2,7 @@ package exceptions;
 
 import dto.UserDTO;
 
-public class InvalidINIException extends Exception
+public class InvalidINIException extends DALException
 {
 	private static final long serialVersionUID = 7355418346336739232L;
 	private UserDTO current;

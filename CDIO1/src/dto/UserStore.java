@@ -15,23 +15,26 @@ import java.util.List;
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.InvalidCPRException;
+import exceptions.InvalidIDException;
+import exceptions.InvalidINIException;
 import exceptions.UserNotFoundException;
+import exceptions.invalidUserNameException;
+import exceptions.noRoleException;
 
 public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
+
 	public UserStore() {
 
-
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	public void loadInfo(){
+	public void loadInfo() {
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					new FileInputStream("UserInfo.ser"));
+			ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
 			users = (ArrayList<UserDTO>) ois.readObject();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -44,11 +47,10 @@ public class UserStore implements IUserDAO {
 			e.printStackTrace();
 		}
 	}
-	
-	public void saveInfo(){
+
+	public void saveInfo() {
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream( 
-					new FileOutputStream(new File("UserInfo.ser")));
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
 			oos.writeObject(users);
 			// close the writing.
 			oos.close();
@@ -57,32 +59,29 @@ public class UserStore implements IUserDAO {
 			e.printStackTrace();
 		}
 	}
-	
 
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
-		for(int i=0;i<users.size();i++){
-			if(users.get(i).getUserID()==userId){
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).getUserID() == userId) {
 				return users.get(i);
 			}
 		}
-		throw new UserNotFoundException("No user has been found with id: "+userId);
+		throw new UserNotFoundException("No user has been found with id: " + userId);
 	}
 
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
-		
+
 		return null;
 	}
 
 	@Override
 	public void createUser(UserDTO user) throws DALException {
-		// users = readUsers();
-		//
-		// int tempID = user.getUserID();
-		//
-		// for(int i = 0; i<users.length; i++){
+
+		loadInfo();
+
 		// if(tempID== users[i])
 		// throw new InvalidIDException("Du har valgt et forkert ID");
 		// }
@@ -132,8 +131,41 @@ public class UserStore implements IUserDAO {
 			} else
 				return false;
 
-		}catch (ArrayIndexOutOfBoundsException e){
+		} catch (ArrayIndexOutOfBoundsException e) {
 			return false;
 		}
+	}
+
+	public void checkUser(UserDTO user) throws DALException {
+
+		int tempID = user.getUserID();
+
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).getUserID() == tempID)
+				throw new InvalidIDException("Rrong userID");
+		}
+		String tempName = user.getUserName();
+
+		if (tempName.length() > 20 && tempName.length() < 2)
+			throw new invalidUserNameException("Wrong name");
+
+		String tempIni = user.getIni();
+
+		for (int i = 0; i < users.size(); i++) {
+			if (tempIni.equals(users.get(i).getIni()))
+				throw new InvalidINIException("Wrong Initial");
+		}
+		String tempCPR = user.getCpr();
+
+		if (checkCpr(tempCPR) == false) {
+			throw new InvalidCPRException("Wrong CPR");
+		}
+		
+		List<String> tempRoles = user.getRoles();
+		
+		if(tempRoles.size()==0)
+			throw new noRoleException("Choose a role");
+			
+
 	}
 }
