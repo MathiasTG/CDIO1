@@ -78,24 +78,10 @@ public class UserStore implements IUserDAO {
 
 	@Override
 	public void createUser(UserDTO user) throws DALException {
-		// users = readUsers();
-		//
-		// int tempID = user.getUserID();
-		//
-		// for(int i = 0; i<users.length; i++){
-		// if(tempID== users[i])
-		// throw new InvalidIDException("Du har valgt et forkert ID");
-		// }
-		//
-		//
-		// if(checkCpr(user.getCpr())){
-		// System.out.println("");
-		//
-		// }else {
-		// throw new InvalidCPRException("Forkert CPR");
-		// }
-		//
-		//
+		loadInfo();
+		checkUser(user);
+		users.add(user);
+		saveInfo();
 	}
 
 	@Override
