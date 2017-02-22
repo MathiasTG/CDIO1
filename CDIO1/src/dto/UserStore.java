@@ -33,7 +33,7 @@ import exceptions.InvalidINIException;
 import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
 import exceptions.DatabaseFullException;
-import exceptions.invalidUserNameException;
+import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
 
 public class UserStore implements IUserDAO {
@@ -215,7 +215,7 @@ public class UserStore implements IUserDAO {
 		String tempName = user.getUserName();
 
 		if (tempName.length() > 20 && tempName.length() < 2)
-			throw new invalidUserNameException("Wrong name");
+			throw new InvalidUserNameException("Wrong name");
 
 		String tempIni = user.getIni();
 
