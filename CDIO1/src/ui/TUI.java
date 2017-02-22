@@ -10,8 +10,10 @@ import exceptions.DatabaseFullException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
+import exceptions.InvalidPasswordException;
 import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
+import exceptions.UserNotFoundException;
 import logic.ILogic;
 
 public class TUI {
@@ -130,7 +132,7 @@ public class TUI {
 		} catch (DatabaseFullException e) {
 			System.out.println("The database is full. Delete a user before entering a new one.");
 		} catch (InvalidIDException e) {
-			System.out.println(e.toString());
+			System.out.println(e.getMessage());
 			System.out.println("Please enter an ID between 11-99");
 			temp.setUserId(input.nextInt());
 			input.nextLine();
@@ -144,7 +146,7 @@ public class TUI {
 			temp.setIni(input.nextLine());
 			sendUser(temp);
 		}catch(InvalidUserNameException e ){
-			System.out.println(e);
+			System.out.println(e.getMessage());
 			System.out.println("Enter a new username");
 			temp.setUserName(input.nextLine());
 			sendUser(temp);
@@ -196,6 +198,11 @@ public class TUI {
 			}
 			temp.setRoles(roles);
 			sendUser(temp);
+		}catch(InvalidPasswordException e){
+			System.out.println(e.getMessage());
+			System.out.println("Please enter a new password with the correct parameters.");
+			temp.setPassword(input.nextLine());
+			sendUser(temp);
 		}catch(DALException e){
 			e.printStackTrace();
 		}
@@ -213,11 +220,13 @@ public class TUI {
 	}
 
 	public void updateUser() {
+
 		System.out.println("Enter the ID of the user you want to update: ");
 		int id = input.nextInt();
 		input.nextLine();
+		UserDTO temp=null;
 		try {
-			UserDTO temp = f.getUser(id);
+			temp = f.getUser(id);
 			while (true) {
 				System.out.println("Which attribute do you want to update?");
 				System.out.println("1.\tUsername");
@@ -364,10 +373,13 @@ public class TUI {
 					break;
 				}
 			}
-		} catch (DALException e) {
+		} catch(UserNotFoundException e){
+			System.out.println("No user was found with that ID.");
+		}catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		sendUser(temp);
 	}
 
 	public void deleteUser() {
