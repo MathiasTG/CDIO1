@@ -26,12 +26,10 @@ import java.util.Random;
 
 import dal.IUserDAO;
 import exceptions.DALException;
-import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
 import exceptions.UserNotFoundException;
-import exceptions.databaseFullException;
 import exceptions.invalidUserNameException;
 import exceptions.noRoleException;
 
@@ -51,24 +49,16 @@ public class UserStore implements IUserDAO {
     static int noOfSChars = 1;   // How many special chars
     static int min = 9;  // Min lenght
     static int max = 12; // Max lenght
-    
-    String pathName = "UserInfo.ser";
-    
 
 	public UserStore() {
 
-	}
-	// Test Mode.
-	
-	public UserStore(String pathName){
-		this.pathName= pathName;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void loadInfo() {
 		
 		try {
-			InputStream file = new FileInputStream(pathName);
+			InputStream file = new FileInputStream("UserInfo.ser");
 		      InputStream buffer = new BufferedInputStream(file);
 		      ObjectInput input = new ObjectInputStream (buffer);
 			//ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
@@ -90,7 +80,7 @@ public class UserStore implements IUserDAO {
 
 	public void saveInfo() {
 		try {
-		    OutputStream file = new FileOutputStream(pathName);
+		    OutputStream file = new FileOutputStream("UserInfo.ser");
 		    OutputStream buffer = new BufferedOutputStream(file);
 		    ObjectOutput output = new ObjectOutputStream(buffer);
 			//ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
@@ -129,7 +119,7 @@ public class UserStore implements IUserDAO {
         return password;
 		
 	}
-	
+	// get next index
 	private static int getNI(Random random, int lenght, char[] password) {
         int index = random.nextInt(lenght);
         while(password[index = random.nextInt(lenght)] != 0);
@@ -140,9 +130,6 @@ public class UserStore implements IUserDAO {
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
-		if(users.size()==0){
-			throw new EmptyStoreException("Empty Store");
-		}
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == userId) {
 				return users.get(i);
@@ -154,9 +141,6 @@ public class UserStore implements IUserDAO {
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
 		loadInfo();
-		if(users.size()==0){
-			throw new EmptyStoreException("Empty Store");
-		}
 		return users;
 		
 	}
@@ -165,9 +149,6 @@ public class UserStore implements IUserDAO {
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
-		if(users.size()==88){
-			throw new databaseFullException("Database is full");
-		}
 		checkUser(user);
 		users.add(user);
 		saveInfo();
@@ -176,30 +157,19 @@ public class UserStore implements IUserDAO {
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
 		//checkUser(user);
-		boolean updateUserStatus = false;
 		loadInfo();
-		if(users.size()==0){
-			throw new EmptyStoreException("Empty Store");
-		}
 		for(int i=0;i<users.size();i++){
 			if(user.getUserID()==users.get(i).getUserID()){
 				users.remove(i);
 				users.add(user);
-				updateUserStatus = true;
 			}
 		}
-		if(updateUserStatus == false)
-			throw new UserNotFoundException("No user has been found with id: " + user.getUserID());
-		
 		saveInfo();
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DALException {
 		loadInfo();
-		if(users.size()==0){
-			throw new EmptyStoreException("Empty Store");
-		}
 		boolean found=false;
 		int index=0;
 		for(int i=0;i<users.size();i++){
