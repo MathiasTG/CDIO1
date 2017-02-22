@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 import dto.UserDTO;
 import exceptions.DALException;
+import exceptions.InvalidCPRException;
+import exceptions.InvalidIDException;
 import logic.ILogic;
 
 public class TUI {
@@ -66,7 +68,7 @@ public class TUI {
 		userName = input.nextLine();
 		System.out.println("Enter the initials of the new user:");
 		initials = input.nextLine();
-		System.out.println("Enter the CPR number of the new user, as an integer: ");
+		System.out.println("Enter the CPR number of the new user: ");
 		cpr = input.nextLine();
 		System.out.println("Enter a password for the new user: ");
 		password = input.nextLine();
@@ -85,7 +87,7 @@ public class TUI {
 					choices.remove("4.\tOperator");
 			}
 			System.out.println("Choose a role to add to the new user:");
-			for(int i=0;i<choices.size();i++)
+			for (int i = 0; i < choices.size(); i++)
 				System.out.println(choices.get(i));
 			int choice = input.nextInt();
 			input.nextLine();
@@ -103,37 +105,39 @@ public class TUI {
 				roles.add("Operator");
 				break;
 			default:
+				if (choice == 5)
+					break;
 				System.out.println("Invalid input. Enter 1-5.");
 			}
 			if (choice == 5)
 				break;
 		}
-		// UserDTO temp = new UserDTO(userID, userName, initials, cpr, password,
-		// roles);
-		// try {
-		// f.createUser(temp);
-		// } catch (IllegalIdException e){
-		// System.out.println("You have entered an Illegal id");
-		// temp.setUserId(input.nextInt());
-		// input.nextLine();
-		// }catch (IllegalCprException e) {
-		// System.out.println("You have entered a wrong CPR.\nPlease enter a
-		// correct one, in 12 integers.\n");
-		// temp.setCpr();
-		// }
-	}
-
-	public void showAllUsers() {
+		UserDTO temp = new UserDTO(userID, userName, initials, cpr, password, roles);
 		try {
-			List<UserDTO> users = f.getUserList();
-			for(int i = 0; i<users.size();i++)
-				System.out.println("User " + i+1 + "\n" + users.get(i).toString());
+			f.createUser(temp);
+		} catch (InvalidIDException e) {
+			System.out.println("You have entered an Illegal id");
+			temp.setUserId(input.nextInt());
+			input.nextLine();
+		} catch (InvalidCPRException e) {
+			System.out.println("You have entered a wrong CPR.\nPlease enter a correct one, in 12 integers.\n");
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void showAllUsers() {
+		try {
+			List<UserDTO> users = f.getUserList();
+			for (int i = 0; i < users.size(); i++)
+				System.out.println("User " + i + 1 + "\n" + users.get(i).toString());
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public void updateUser() {
 		System.out.println("Enter the ID of the user you want to update: ");
 		int id = input.nextInt();
@@ -142,38 +146,32 @@ public class TUI {
 			UserDTO temp = f.getUser(id);
 			while (true) {
 				System.out.println("Which attribute do you want to update?");
-				System.out.println("1.\tID");
-				System.out.println("2.\tUsername");
-				System.out.println("3.\tInitials");
-				System.out.println("4.\tCPR number");
-				System.out.println("5.\tPassword");
-				System.out.println("6.\tRoles");
-				System.out.println("7.\tEnd update");
+				System.out.println("1.\tUsername");
+				System.out.println("2.\tInitials");
+				System.out.println("3.\tCPR number");
+				System.out.println("4.\tPassword");
+				System.out.println("5.\tRoles");
+				System.out.println("6.\tEnd update");
 				int choice = input.nextInt();
 				input.nextLine();
 				switch (choice) {
 				case 1:
-					System.out.println("Enter the new ID of the user, as an integer between 11 and 99:");
-					temp.setUserId(input.nextInt());
-					input.nextLine();
-					break;
-				case 2:
 					System.out.println("Enter the new name of the user:");
 					temp.setUserName(input.nextLine());
 					break;
-				case 3:
+				case 2:
 					System.out.println("Enter the new initials of the user:");
 					temp.setIni(input.nextLine());
 					break;
-				case 4:
+				case 3:
 					System.out.println("Enter the new CPR of the user:");
 					temp.setCpr(input.nextLine());
 					break;
-				case 5:
+				case 4:
 					System.out.println("Enter the new password of the user:");
 					temp.setPassword(input.nextLine());
 					break;
-				case 6:
+				case 5:
 					System.out.println("Do you want to add or delete roles?\n1.\tAdd roles\n2.\tDelete roles");
 					int subchoice = input.nextInt();
 					input.nextLine();
@@ -198,7 +196,7 @@ public class TUI {
 									choices.remove("4.\tOperator");
 							}
 							System.out.println("Choose a role to add to the user:");
-							for(int i=0;i<choices.size();i++)
+							for (int i = 0; i < choices.size(); i++)
 								System.out.println(choices.get(i));
 							int subsubchoice = input.nextInt();
 							input.nextLine();
@@ -216,6 +214,8 @@ public class TUI {
 								roles.add("Operator");
 								break;
 							default:
+								if (subsubchoice == 5)
+									break;
 								System.out.println("Invalid input. Enter 1-5.");
 							}
 							if (subsubchoice == 5) {
@@ -239,9 +239,9 @@ public class TUI {
 									choices2.add("4.\tOperator");
 							}
 							choices2.add("5.\tRole selection done");
-							
+
 							System.out.println("Choose a role to remove from the user:");
-							for(int i=0;i<choices2.size();i++)
+							for (int i = 0; i < choices2.size(); i++)
 								System.out.println(choices2.get(i));
 							int subsubchoice = input.nextInt();
 							input.nextLine();
@@ -259,6 +259,8 @@ public class TUI {
 								roles2.remove("Operator");
 								break;
 							default:
+								if (subsubchoice == 5)
+									break;
 								System.out.println("Invalid input. Enter 1-5.");
 							}
 							if (subsubchoice == 5) {
@@ -268,17 +270,23 @@ public class TUI {
 						}
 						break;
 					default:
+						if (subchoice == 3) {
+							break;
+						}
 						System.out.println("Invalid input. Enter 1-3.");
 						break;
 					}
-					if(subchoice==3){
+					if (subchoice == 3) {
 						break;
 					}
 				default:
-					System.out.println("Invalid input. Enter 1-7");
+					if (choice == 6) {
+						break;
+					}
+					System.out.println("Invalid input. Enter 1-6");
 					break;
 				}
-				if(choice==7){
+				if (choice == 6) {
 					break;
 				}
 			}

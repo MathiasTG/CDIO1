@@ -11,7 +11,8 @@ public class tmmain {
 	}
 
 	public static void main(String[] args) {
-		ILogic f=new logic(null);
+		UserStore d=new UserStore();
+		ILogic f=new logic(d);
 		TUI t = new TUI(f);
 		t.menu();
 	}
