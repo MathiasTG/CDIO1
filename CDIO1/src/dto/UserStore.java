@@ -50,16 +50,24 @@ public class UserStore implements IUserDAO {
     private final int noOfSChars = 1;   // How many special chars
     private final int min = 9;  // Min lenght
     private final int max = 12; // Max lenght
+    
+   private String pathName = "UserInfo.ser";
+    
 
 	public UserStore() {
 
+	}
+	// Test Mode.
+	
+	public UserStore(String pathName){
+		this.pathName= pathName;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void loadInfo() {
 		
 		try {
-			InputStream file = new FileInputStream("UserInfo.ser");
+			InputStream file = new FileInputStream(pathName);
 		      InputStream buffer = new BufferedInputStream(file);
 		      ObjectInput input = new ObjectInputStream (buffer);
 			//ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
@@ -81,7 +89,7 @@ public class UserStore implements IUserDAO {
 
 	public void saveInfo() {
 		try {
-		    OutputStream file = new FileOutputStream("UserInfo.ser");
+		    OutputStream file = new FileOutputStream(pathName);
 		    OutputStream buffer = new BufferedOutputStream(file);
 		    ObjectOutput output = new ObjectOutputStream(buffer);
 			//ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
@@ -116,7 +124,11 @@ public class UserStore implements IUserDAO {
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
+		
 		user.setPassword(pwg());
+		if(users.size()==88){
+			throw new databaseFullException("Database is full");
+		}
 		checkUser(user);
 		users.add(user);
 		saveInfo();
@@ -125,19 +137,30 @@ public class UserStore implements IUserDAO {
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
 		checkUser(user);
+		boolean updateUserStatus = false;
 		loadInfo();
+		if(users.size()==0){
+			throw new EmptyStoreException("Empty Store");
+		}
 		for(int i=0;i<users.size();i++){
 			if(user.getUserID()==users.get(i).getUserID()){
 				users.remove(i);
 				users.add(user);
+				updateUserStatus = true;
 			}
 		}
+		if(updateUserStatus == false)
+			throw new UserNotFoundException("No user has been found with id: " + user.getUserID());
+		
 		saveInfo();
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DALException {
 		loadInfo();
+		if(users.size()==0){
+			throw new EmptyStoreException("Empty Store");
+		}
 		boolean found=false;
 		int index=0;
 		for(int i=0;i<users.size();i++){
