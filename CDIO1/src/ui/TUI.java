@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -70,12 +71,20 @@ public class TUI {
 		
 		while(true){
 			System.out.println("Enter the ID of the new user, as an integer between 11 and 99:");
-			userID = input.nextInt();
-			input.nextLine();
-			if(userID>=11&&userID<=99)
-				break;
-			else
-				System.out.println(userID+" is not a valid ID.");
+			userID=0;
+			try{
+				if(userID>=11&&userID<=99)
+					break;
+				userID = input.nextInt();
+				input.nextLine();
+				if(userID>=11&&userID<=99)
+					break;
+				else
+					System.out.println(userID+" is not a valid ID.");
+			}catch(InputMismatchException e){
+				input.nextLine();
+				System.out.println("The ID you entered was not of type integer.");
+			}
 		}
 		System.out.println("Enter the username of the new user:");
 		userName = input.nextLine();
@@ -283,7 +292,9 @@ public class TUI {
 			List<UserDTO> users = f.getUserList();
 			for (int i = 0; i < users.size(); i++)
 				System.out.println("User " + (i + 1) + "\n" + users.get(i).toString());
-		} catch (DALException e) {
+		} catch(EmptyStoreException e){
+			System.out.println(e.getMessage());
+		}catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
