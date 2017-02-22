@@ -164,7 +164,7 @@ public class UserStore implements IUserDAO {
 
 		loadInfo();
 		if (users.size() == 88) {
-			throw new databaseFullException("Database is full");
+			throw new DatabaseFullException("Database is full");
 		}
 		checkUser(user);
 		users.add(user);
