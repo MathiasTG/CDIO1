@@ -26,6 +26,7 @@ import java.util.Random;
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
@@ -131,6 +132,9 @@ public class UserStore implements IUserDAO {
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
+		if(users.size()==0){
+			throw new EmptyStoreException("Empty Store");
+		}
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == userId) {
 				return users.get(i);
@@ -142,6 +146,9 @@ public class UserStore implements IUserDAO {
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
 		loadInfo();
+		if(users.size()==0){
+			throw new EmptyStoreException("Empty Store");
+		}
 		return users;
 		
 	}
@@ -161,19 +168,30 @@ public class UserStore implements IUserDAO {
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
 		//checkUser(user);
+		boolean updateUserStatus = false;
 		loadInfo();
+		if(users.size()==0){
+			throw new EmptyStoreException("Empty Store");
+		}
 		for(int i=0;i<users.size();i++){
 			if(user.getUserID()==users.get(i).getUserID()){
 				users.remove(i);
 				users.add(user);
+				updateUserStatus = true;
 			}
 		}
+		if(updateUserStatus == false)
+			throw new UserNotFoundException("No user has been found with id: " + user.getUserID());
+		
 		saveInfo();
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DALException {
 		loadInfo();
+		if(users.size()==0){
+			throw new EmptyStoreException("Empty Store");
+		}
 		boolean found=false;
 		int index=0;
 		for(int i=0;i<users.size();i++){

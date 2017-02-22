@@ -2,7 +2,7 @@ package exceptions;
 
 import dto.UserDTO;
 
-public class EmptyStoreException extends Exception {
+public class EmptyStoreException extends DALException {
 	private static final long serialVersionUID = 7355418346336739232L;
 	private UserDTO current;
 
