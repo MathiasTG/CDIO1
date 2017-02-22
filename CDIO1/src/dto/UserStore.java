@@ -51,7 +51,7 @@ public class UserStore implements IUserDAO {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}catch (EOFException e){
-			users=new ArrayList();
+			users=new ArrayList<UserDTO>();
 		}catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
