@@ -19,10 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.Scanner;
+import java.util.Scanner;
 import java.util.Random;
-
-
 
 import dal.IUserDAO;
 import exceptions.DALException;
@@ -30,10 +28,9 @@ import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
-import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
 import exceptions.DatabaseFullException;
-import exceptions.invalidUserNameException;
+import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
 
 public class UserStore implements IUserDAO {
@@ -101,9 +98,48 @@ public class UserStore implements IUserDAO {
 		}
 	}
 	
+
+	public static char[] pwg(int minLenght, int maxLenght, int CAPSNumber, int CHARSNumber, int DIGITSNumber) {
+
+		Random random = new Random();
+		int lenght = random.nextInt(max - min + 1) + min;
+		char[] password = new char[lenght];
+		int index = 0;
+		for (int i = 0; i < noOfBLetter; i++) {
+			index = getNI(random, lenght, password);
+			password[index] = ULetter.charAt(random.nextInt(ULetter.length()));
+		}
+		for (int i = 0; i < noOfNumbers; i++) {
+			index = getNI(random, lenght, password);
+			password[index] = Number.charAt(random.nextInt(Number.length()));
+		}
+		for (int i = 0; i < noOfSChars; i++) {
+			index = getNI(random, lenght, password);
+			password[index] = SChars.charAt(random.nextInt(SChars.length()));
+		}
+		for (int i = 0; i < lenght; i++) {
+			if (password[i] == 0) {
+				password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
+			}
+		}
+		return password;
+
+	}
+
+	private static int getNI(Random random, int lenght, char[] password) {
+		int index = random.nextInt(lenght);
+		while (password[index = random.nextInt(lenght)] != 0)
+			;
+		return index;
+	}
+
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
+
+		if (users.size() == 0) {
+			throw new EmptyStoreException("Empty Store");
+		}
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == userId) {
 				return users.get(i);
@@ -115,18 +151,20 @@ public class UserStore implements IUserDAO {
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
 		loadInfo();
+
+		if (users.size() == 0) {
+			throw new EmptyStoreException("Empty Store");
+		}
 		return users;
-		
+
 	}
 
 	@Override
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
-		
-		user.setPassword(pwg());
-		if(users.size()==88){
-			throw new DatabaseFullException("Database is full");
+		if (users.size() == 88) {
+			throw new databaseFullException("Database is full");
 		}
 		checkUser(user);
 		users.add(user);
