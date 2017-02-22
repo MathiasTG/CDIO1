@@ -29,6 +29,7 @@ import exceptions.DALException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
+import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
 import exceptions.invalidUserNameException;
 import exceptions.noRoleException;
@@ -40,15 +41,15 @@ public class UserStore implements IUserDAO {
 	private String theString = "The value of that string";
 	private int    someInteger = 0;
 	
-	private static final String ULetter  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // Upper case
-    private static final String Lletter   = "abcdefghijklmnopqrstuvwxyz"; // Lower case
-    private static final String Number     = "0123456789";
-    private static final String SChars   = "!@#$%^&*_=+-/";
-    static int noOfBLetter = 1; // How many Uppercase letters
-    static int noOfNumbers = 1; // How many numbers
-    static int noOfSChars = 1;   // How many special chars
-    static int min = 9;  // Min lenght
-    static int max = 12; // Max lenght
+	private final String ULetter  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // Upper case
+    private final String Lletter   = "abcdefghijklmnopqrstuvwxyz"; // Lower case
+    private final String Number     = "0123456789";
+    private final String SChars   = "!@#$%^&*_=+-/";
+    private final int noOfBLetter = 1; // How many Uppercase letters
+    private final int noOfNumbers = 1; // How many numbers
+    private final int noOfSChars = 1;   // How many special chars
+    private final int min = 9;  // Min lenght
+    private final int max = 12; // Max lenght
 
 	public UserStore() {
 
@@ -93,40 +94,6 @@ public class UserStore implements IUserDAO {
 		}
 	}
 	
-	public static char[] pwg (int minLenght, int maxLenght, int CAPSNumber, int CHARSNumber,int DIGITSNumber ) {
-		
-		Random random = new Random();
-        int lenght = random.nextInt(max - min + 1) + min;
-        char[] password = new char[lenght];
-        int index = 0;
-        for (int i = 0; i < noOfBLetter; i++) {
-            index = getNI(random, lenght, password);
-            password[index] = ULetter.charAt(random.nextInt(ULetter.length()));
-        }
-        for (int i = 0; i < noOfNumbers; i++) {
-            index = getNI(random, lenght, password);
-            password[index] = Number.charAt(random.nextInt(Number.length()));
-        }
-        for (int i = 0; i < noOfSChars; i++) {
-            index = getNI(random, lenght, password);
-            password[index] = SChars.charAt(random.nextInt(SChars.length()));
-        }
-        for(int i = 0; i < lenght; i++) {
-            if(password[i] == 0) {
-                password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
-            }
-        }
-        return password;
-		
-	}
-	
-	private static int getNI(Random random, int lenght, char[] password) {
-        int index = random.nextInt(lenght);
-        while(password[index = random.nextInt(lenght)] != 0);
-        return index;
-    }
-	
-	
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
@@ -149,6 +116,7 @@ public class UserStore implements IUserDAO {
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
+		user.setPassword(pwg());
 		checkUser(user);
 		users.add(user);
 		saveInfo();
@@ -156,7 +124,7 @@ public class UserStore implements IUserDAO {
 
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
-		//checkUser(user);
+		checkUser(user);
 		loadInfo();
 		for(int i=0;i<users.size();i++){
 			if(user.getUserID()==users.get(i).getUserID()){
@@ -243,7 +211,73 @@ public class UserStore implements IUserDAO {
 		
 		if(tempRoles.size()==0)
 			throw new noRoleException("Choose a role");
-			
-
+		checkPsw(user.getPassword());
+		
 	}
+	private void checkPsw(String password) throws DALException{
+		if(password.length()>max){
+			throw new InvalidPasswordException("Password too long");
+		}
+		if(password.length()<min){
+			throw new InvalidPasswordException("Password too short");
+		}
+		int noOfCAPS=0;int noSCHR=0;int noDigits=0;
+		for(int i = 0;i<password.length();i++){
+			if(Character.isUpperCase(password.charAt(i))){
+				noOfCAPS++;
+			}else if(Character.isDigit(password.charAt(i))){
+				noDigits++;
+			}else if(!password.matches("[^A-Za-z0-9 ]")){
+				noSCHR++;
+			}
+		}
+		if(noOfCAPS<noOfBLetter){
+			throw new InvalidPasswordException("Password must contain at least"+noOfBLetter +"upper case character");
+		}
+		if(noSCHR<noOfSChars){
+			throw new InvalidPasswordException("Password must contain at least"+noOfSChars+ "special character [!@#$%^&*_=+-/]");
+		}
+		if(noDigits<noOfNumbers){
+			throw new InvalidPasswordException("Password must contain at least"+noOfNumbers +"digits");
+		}
+		
+	}
+	
+	private String pwg () {
+		
+		Random random = new Random();
+        int lenght = random.nextInt(max - min + 1) + min;
+        char[] password = new char[lenght];
+        int index = 0;
+        for (int i = 0; i < noOfBLetter; i++) {
+            index = getNI(random, lenght, password);
+            password[index] = ULetter.charAt(random.nextInt(ULetter.length()));
+        }
+        for (int i = 0; i < noOfNumbers; i++) {
+            index = getNI(random, lenght, password);
+            password[index] = Number.charAt(random.nextInt(Number.length()));
+        }
+        for (int i = 0; i < noOfSChars; i++) {
+            index = getNI(random, lenght, password);
+            password[index] = SChars.charAt(random.nextInt(SChars.length()));
+        }
+        for(int i = 0; i < lenght; i++) {
+            if(password[i] == 0) {
+                password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
+            }
+        }
+        String returnString="";
+        for(int i = 0 ; i < password.length ; i++ ){
+        	returnString+=password[i];
+        }
+        return returnString;
+		
+	}
+	
+	private int getNI(Random random, int lenght, char[] password) {
+        int index = random.nextInt(lenght);
+        
+        while(password[index = random.nextInt(lenght)] != 0);
+        return index;
+    }
 }
