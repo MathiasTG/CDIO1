@@ -30,6 +30,7 @@ import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
 import exceptions.UserNotFoundException;
+import exceptions.databaseFullException;
 import exceptions.invalidUserNameException;
 import exceptions.noRoleException;
 
@@ -149,6 +150,9 @@ public class UserStore implements IUserDAO {
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
+		if(users.size()==88){
+			throw new databaseFullException("Database is full");
+		}
 		checkUser(user);
 		users.add(user);
 		saveInfo();
