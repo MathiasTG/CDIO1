@@ -52,7 +52,7 @@ public class UserStore implements IUserDAO {
     static int min = 9;  // Min lenght
     static int max = 12; // Max lenght
     
-    String pathName = "UserInfo.ser";
+   private String pathName = "UserInfo.ser";
     
 
 	public UserStore() {
