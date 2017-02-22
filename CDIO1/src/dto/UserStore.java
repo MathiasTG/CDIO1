@@ -42,19 +42,17 @@ public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
 
-	private final String ULetter  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // Upper case
-	private final String Lletter   = "abcdefghijklmnopqrstuvwxyz"; // Lower case
-	private final String Number     = "0123456789";
-	private final String SChars   = "!@#$%^&*_=+-/";
+	private final String ULetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Upper case
+	private final String Lletter = "abcdefghijklmnopqrstuvwxyz"; // Lower case
+	private final String Number = "0123456789";
+	private final String SChars = "!@#$%^&*_=+-/";
 	private final int noOfBLetter = 1; // How many Uppercase letters
 	private final int noOfNumbers = 1; // How many numbers
-	private final int noOfSChars = 1;   // How many special chars
-	private final int min = 9;  // Min lenght
+	private final int noOfSChars = 1; // How many special chars
+	private final int min = 9; // Min lenght
 	private final int max = 12; // Max lenght
 
-
 	private String pathName = "UserInfo.ser";
-
 
 	public UserStore() {
 
@@ -66,16 +64,16 @@ public class UserStore implements IUserDAO {
 		try {
 			InputStream file = new FileInputStream("UserInfo.ser");
 			InputStream buffer = new BufferedInputStream(file);
-			ObjectInput input = new ObjectInputStream (buffer);
-			//ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
+			ObjectInput input = new ObjectInputStream(buffer);
+			// ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
 			users = (ArrayList<UserDTO>) input.readObject();
 			input.close();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}catch (EOFException e){
-			users=new ArrayList<UserDTO>();
-		}catch (IOException e1) {
+		} catch (EOFException e) {
+			users = new ArrayList<UserDTO>();
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -89,7 +87,8 @@ public class UserStore implements IUserDAO {
 			OutputStream file = new FileOutputStream("UserInfo.ser");
 			OutputStream buffer = new BufferedOutputStream(file);
 			ObjectOutput output = new ObjectOutputStream(buffer);
-			//ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
+			// ObjectOutputStream oos = new ObjectOutputStream(new
+			// FileOutputStream(new File("UserInfo.ser")));
 			output.writeObject(users);
 			// close the writing.
 			output.close();
@@ -98,8 +97,6 @@ public class UserStore implements IUserDAO {
 			e.printStackTrace();
 		}
 	}
-
-
 
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
@@ -126,7 +123,7 @@ public class UserStore implements IUserDAO {
 
 		user.setPassword(pwg());
 
-		if(users.size()==88){
+		if (users.size() == 88) {
 			throw new DatabaseFullException("Database is full");
 		}
 		checkUser(user);
@@ -136,10 +133,10 @@ public class UserStore implements IUserDAO {
 
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
-		checkUser(user);
+		checkUpdatedUser(user);
 		loadInfo();
-		for(int i=0;i<users.size();i++){
-			if(user.getUserID()==users.get(i).getUserID()){
+		for (int i = 0; i < users.size(); i++) {
+			if (user.getUserID() == users.get(i).getUserID()) {
 				users.remove(i);
 				users.add(user);
 			}
@@ -150,19 +147,19 @@ public class UserStore implements IUserDAO {
 	@Override
 	public void deleteUser(int userId) throws DALException {
 		loadInfo();
-		boolean found=false;
-		int index=0;
-		for(int i=0;i<users.size();i++){
-			if(userId==users.get(i).getUserID()){
-				found=true;
-				index=i;
+		boolean found = false;
+		int index = 0;
+		for (int i = 0; i < users.size(); i++) {
+			if (userId == users.get(i).getUserID()) {
+				found = true;
+				index = i;
 			}
 		}
-		if(found==true){
+		if (found == true) {
 			users.remove(index);
 			saveInfo();
-		}else
-			throw new UserNotFoundException("No user was found with id: "+userId);
+		} else
+			throw new UserNotFoundException("No user was found with id: " + userId);
 	}
 
 	public boolean checkCpr(String cpr) {
@@ -221,41 +218,74 @@ public class UserStore implements IUserDAO {
 
 		List<String> tempRoles = user.getRoles();
 
-		if(tempRoles.size()==0)
+		if (tempRoles.size() == 0)
 			throw new NoRoleException("Choose a role");
 		checkPsw(user.getPassword());
 
 	}
-	private void checkPsw(String password) throws DALException{
-		if(password.length()>max){
+
+	public void checkUpdatedUser(UserDTO user) throws DALException {
+
+		String tempName = user.getUserName();
+
+		if (tempName.length() > 20 && tempName.length() < 2)
+			throw new InvalidUserNameException("Wrong name");
+
+		String tempIni = user.getIni();
+
+		for (int i = 0; i < users.size(); i++) {
+			if (tempIni.equals(users.get(i).getIni()))
+				if (users.get(i).getUserID() != user.getUserID()) {
+					throw new InvalidINIException("Wrong Initial");
+				}
+		}
+		String tempCPR = user.getCpr();
+
+		if (checkCpr(tempCPR) == false) {
+			throw new InvalidCPRException("Wrong CPR");
+		}
+
+		List<String> tempRoles = user.getRoles();
+
+		if (tempRoles.size() == 0)
+			throw new NoRoleException("Choose a role");
+		checkPsw(user.getPassword());
+
+	}
+
+	private void checkPsw(String password) throws DALException {
+		if (password.length() > max) {
 			throw new InvalidPasswordException("Password too long");
 		}
-		if(password.length()<min){
+		if (password.length() < min) {
 			throw new InvalidPasswordException("Password too short");
 		}
-		int noOfCAPS=0;int noSCHR=0;int noDigits=0;
-		for(int i = 0;i<password.length();i++){
-			if(Character.isUpperCase(password.charAt(i))){
+		int noOfCAPS = 0;
+		int noSCHR = 0;
+		int noDigits = 0;
+		for (int i = 0; i < password.length(); i++) {
+			if (Character.isUpperCase(password.charAt(i))) {
 				noOfCAPS++;
-			}else if(Character.isDigit(password.charAt(i))){
+			} else if (Character.isDigit(password.charAt(i))) {
 				noDigits++;
-			}else if(!password.matches("[^A-Za-z0-9 ]")){
+			} else if (!password.matches("[^A-Za-z0-9 ]")) {
 				noSCHR++;
 			}
 		}
-		if(noOfCAPS<noOfBLetter){
-			throw new InvalidPasswordException("Password must contain at least"+noOfBLetter +"upper case character");
+		if (noOfCAPS < noOfBLetter) {
+			throw new InvalidPasswordException("Password must contain at least" + noOfBLetter + "upper case character");
 		}
-		if(noSCHR<noOfSChars){
-			throw new InvalidPasswordException("Password must contain at least"+noOfSChars+ "special character [!@#$%^&*_=+-/]");
+		if (noSCHR < noOfSChars) {
+			throw new InvalidPasswordException(
+					"Password must contain at least" + noOfSChars + "special character [!@#$%^&*_=+-/]");
 		}
-		if(noDigits<noOfNumbers){
-			throw new InvalidPasswordException("Password must contain at least"+noOfNumbers +"digits");
+		if (noDigits < noOfNumbers) {
+			throw new InvalidPasswordException("Password must contain at least" + noOfNumbers + "digits");
 		}
 
 	}
 
-	private String pwg () {
+	private String pwg() {
 
 		Random random = new Random();
 		int lenght = random.nextInt(max - min + 1) + min;
@@ -273,14 +303,14 @@ public class UserStore implements IUserDAO {
 			index = getNI(random, lenght, password);
 			password[index] = SChars.charAt(random.nextInt(SChars.length()));
 		}
-		for(int i = 0; i < lenght; i++) {
-			if(password[i] == 0) {
+		for (int i = 0; i < lenght; i++) {
+			if (password[i] == 0) {
 				password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
 			}
 		}
-		String returnString="";
-		for(int i = 0 ; i < password.length ; i++ ){
-			returnString+=password[i];
+		String returnString = "";
+		for (int i = 0; i < password.length; i++) {
+			returnString += password[i];
 		}
 		return returnString;
 
@@ -289,7 +319,8 @@ public class UserStore implements IUserDAO {
 	private int getNI(Random random, int lenght, char[] password) {
 		int index = random.nextInt(lenght);
 
-		while(password[index = random.nextInt(lenght)] != 0);
+		while (password[index = random.nextInt(lenght)] != 0)
+			;
 		return index;
 	}
 }
