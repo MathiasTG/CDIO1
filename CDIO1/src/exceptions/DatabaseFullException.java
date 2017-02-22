@@ -2,15 +2,15 @@ package exceptions;
 
 import dto.UserDTO;
 
-public class databaseFullException extends DALException {
+public class DatabaseFullException extends DALException {
 	private static final long serialVersionUID = 7355418346336739232L;
 	private UserDTO current;
 
-	public databaseFullException(String msg) {
+	public DatabaseFullException(String msg) {
 		super(msg);
 	}
 
-	public databaseFullException(String msg, UserDTO current) {
+	public DatabaseFullException(String msg, UserDTO current) {
 		super(msg);
 		this.current = current;
 	}

@@ -26,20 +26,19 @@ import java.util.Random;
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
 import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
+import exceptions.DatabaseFullException;
 import exceptions.invalidUserNameException;
-import exceptions.noRoleException;
+import exceptions.NoRoleException;
 
 public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
-
-	private String theString = "The value of that string";
-	private int    someInteger = 0;
 	
 	private final String ULetter  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // Upper case
     private final String Lletter   = "abcdefghijklmnopqrstuvwxyz"; // Lower case
@@ -127,7 +126,7 @@ public class UserStore implements IUserDAO {
 		
 		user.setPassword(pwg());
 		if(users.size()==88){
-			throw new databaseFullException("Database is full");
+			throw new DatabaseFullException("Database is full");
 		}
 		checkUser(user);
 		users.add(user);
@@ -233,7 +232,7 @@ public class UserStore implements IUserDAO {
 		List<String> tempRoles = user.getRoles();
 		
 		if(tempRoles.size()==0)
-			throw new noRoleException("Choose a role");
+			throw new NoRoleException("Choose a role");
 		checkPsw(user.getPassword());
 		
 	}
