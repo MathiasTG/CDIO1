@@ -51,16 +51,24 @@ public class UserStore implements IUserDAO {
     static int noOfSChars = 1;   // How many special chars
     static int min = 9;  // Min lenght
     static int max = 12; // Max lenght
+    
+    String pathName = "UserInfo.ser";
+    
 
 	public UserStore() {
 
+	}
+	// Test Mode.
+	
+	public UserStore(String pathName){
+		this.pathName= pathName;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void loadInfo() {
 		
 		try {
-			InputStream file = new FileInputStream("UserInfo.ser");
+			InputStream file = new FileInputStream(pathName);
 		      InputStream buffer = new BufferedInputStream(file);
 		      ObjectInput input = new ObjectInputStream (buffer);
 			//ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
@@ -82,7 +90,7 @@ public class UserStore implements IUserDAO {
 
 	public void saveInfo() {
 		try {
-		    OutputStream file = new FileOutputStream("UserInfo.ser");
+		    OutputStream file = new FileOutputStream(pathName);
 		    OutputStream buffer = new BufferedOutputStream(file);
 		    ObjectOutput output = new ObjectOutputStream(buffer);
 			//ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
