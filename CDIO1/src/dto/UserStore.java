@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.StreamCorruptedException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,7 +76,10 @@ public class UserStore implements IUserDAO {
 			e1.printStackTrace();
 		} catch (EOFException e) {
 			users = new ArrayList<UserDTO>();
-		} catch (IOException e1) {
+		} catch(StreamCorruptedException e){
+			System.out.println("The file is currupted.");
+			e.printStackTrace();
+		}catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (ClassNotFoundException e) {
