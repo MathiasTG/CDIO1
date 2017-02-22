@@ -16,22 +16,22 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Random;
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.DatabaseFullException;
 import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
-import exceptions.UserNotFoundException;
-import exceptions.DatabaseFullException;
+import exceptions.InvalidPasswordException;
 import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
+import exceptions.UserNotFoundException;
 
 public class UserStore implements IUserDAO {
 
@@ -99,39 +99,6 @@ public class UserStore implements IUserDAO {
 	}
 	
 
-	public static char[] pwg(int minLenght, int maxLenght, int CAPSNumber, int CHARSNumber, int DIGITSNumber) {
-
-		Random random = new Random();
-		int lenght = random.nextInt(max - min + 1) + min;
-		char[] password = new char[lenght];
-		int index = 0;
-		for (int i = 0; i < noOfBLetter; i++) {
-			index = getNI(random, lenght, password);
-			password[index] = ULetter.charAt(random.nextInt(ULetter.length()));
-		}
-		for (int i = 0; i < noOfNumbers; i++) {
-			index = getNI(random, lenght, password);
-			password[index] = Number.charAt(random.nextInt(Number.length()));
-		}
-		for (int i = 0; i < noOfSChars; i++) {
-			index = getNI(random, lenght, password);
-			password[index] = SChars.charAt(random.nextInt(SChars.length()));
-		}
-		for (int i = 0; i < lenght; i++) {
-			if (password[i] == 0) {
-				password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
-			}
-		}
-		return password;
-
-	}
-
-	private static int getNI(Random random, int lenght, char[] password) {
-		int index = random.nextInt(lenght);
-		while (password[index = random.nextInt(lenght)] != 0)
-			;
-		return index;
-	}
 
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
@@ -253,7 +220,7 @@ public class UserStore implements IUserDAO {
 		String tempName = user.getUserName();
 
 		if (tempName.length() > 20 && tempName.length() < 2)
-			throw new invalidUserNameException("Wrong name");
+			throw new InvalidUserNameException("Wrong name");
 
 		String tempIni = user.getIni();
 
