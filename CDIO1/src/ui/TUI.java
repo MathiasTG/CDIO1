@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import dto.UserDTO;
 import exceptions.DALException;
+import exceptions.DatabaseFullException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import logic.ILogic;
@@ -60,10 +61,16 @@ public class TUI {
 		choices.add("3.\tForeman");
 		choices.add("4.\tOperator");
 		choices.add("5.\tRole selection done");
-
-		System.out.println("Enter the ID of the new user, as an integer between 11 and 99:");
-		userID = input.nextInt();
-		input.nextLine();
+		
+		while(true){
+			System.out.println("Enter the ID of the new user, as an integer between 11 and 99:");
+			userID = input.nextInt();
+			input.nextLine();
+			if(userID>=11||userID<=99)
+				break;
+			else
+				System.out.println(userID+" is not a valid ID.");
+		}
 		System.out.println("Enter the username of the new user:");
 		userName = input.nextLine();
 		System.out.println("Enter the initials of the new user:");
@@ -115,13 +122,16 @@ public class TUI {
 			f.createUser(temp);
 			System.out.println(f.getUser(userID));
 		} catch (InvalidIDException e) {
-			System.out.println("You have entered an Illegal id");
+			System.out.println("You have entered an illegal id");
+			System.out.println(e.toString());
 			temp.setUserId(input.nextInt());
 			input.nextLine();
 		} catch (InvalidCPRException e) {
-			System.out.println("You have entered a wrong CPR.\nPlease enter a correct one, in 12 integers.\n");
-		} catch (DALException e) {
+			System.out.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
+		} catch (DatabaseFullException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(DALException e){
 			e.printStackTrace();
 		}
 	}
