@@ -50,7 +50,7 @@ public class TUI {
 	}
 
 	public void createUser() {
-		String userName, initials, password, cpr;
+		String userName, initials, cpr;
 		int userID;
 
 		List<String> roles = new ArrayList<String>();
@@ -68,10 +68,8 @@ public class TUI {
 		userName = input.nextLine();
 		System.out.println("Enter the initials of the new user:");
 		initials = input.nextLine();
-		System.out.println("Enter the CPR number of the new user: ");
+		System.out.println("Enter the CPR number of the new user (123456-7890): ");
 		cpr = input.nextLine();
-		System.out.println("Enter a password for the new user: ");
-		password = input.nextLine();
 		System.out.println("Enter the roles of the new user:");
 
 		while (true) {
@@ -112,9 +110,10 @@ public class TUI {
 			if (choice == 5)
 				break;
 		}
-		UserDTO temp = new UserDTO(userID, userName, initials, cpr, password, roles);
+		UserDTO temp = new UserDTO(userID, userName, initials, cpr, null, roles);
 		try {
 			f.createUser(temp);
+			System.out.println(f.getUser(userID));
 		} catch (InvalidIDException e) {
 			System.out.println("You have entered an Illegal id");
 			temp.setUserId(input.nextInt());
