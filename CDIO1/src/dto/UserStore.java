@@ -62,11 +62,13 @@ public class UserStore implements IUserDAO {
 	public void loadInfo() {
 
 		try {
-			InputStream file = new FileInputStream("UserInfo.ser");
+			InputStream file = new FileInputStream(pathName);
 			InputStream buffer = new BufferedInputStream(file);
 			ObjectInput input = new ObjectInputStream(buffer);
 			// ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
 			users = (ArrayList<UserDTO>) input.readObject();
+			if(users.equals(null))
+				users= new ArrayList<UserDTO>();
 			input.close();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -84,7 +86,7 @@ public class UserStore implements IUserDAO {
 
 	public void saveInfo() {
 		try {
-			OutputStream file = new FileOutputStream("UserInfo.ser");
+			OutputStream file = new FileOutputStream(pathName);
 			OutputStream buffer = new BufferedOutputStream(file);
 			ObjectOutput output = new ObjectOutputStream(buffer);
 			// ObjectOutputStream oos = new ObjectOutputStream(new
@@ -112,6 +114,8 @@ public class UserStore implements IUserDAO {
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
 		loadInfo();
+		if(users.size()==0)
+			throw new EmptyStoreException("There are no users in the database.");
 		return users;
 
 	}

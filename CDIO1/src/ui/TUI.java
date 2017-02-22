@@ -283,7 +283,9 @@ public class TUI {
 			List<UserDTO> users = f.getUserList();
 			for (int i = 0; i < users.size(); i++)
 				System.out.println("User " + (i + 1) + "\n" + users.get(i).toString());
-		} catch (DALException e) {
+		} catch(EmptyStoreException e){
+			System.out.println(e.getMessage());
+		}catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
