@@ -27,39 +27,34 @@ import dto.UserStore;
 public class UserStoreTest {
 	private List<UserDTO> users;
 	String pathName = "testData.ser";
+//	@Before
+//	public void setup() {
+//		UserStore data = new UserStore(pathName);
+//		loadInfo();
+//
+//	}
 
-	@Before
-	public void setup() {
-		users = null;
-		saveInfo();
-		UserStore data = new UserStore(pathName);
-		loadInfo();
-
-	}
-
-	@After
-	public void teardown() {
-		users = null;
-		saveInfo();
-	}
+//	@After
+//	public void teardown() {
+//
+//	}
 
 	@Test
 	public void testDatabase() {
-		list<String> roles = new ArrayList<String>();
-		
-		UserDTO user1  = new UserDTO(11, "Jonas Larsen" "JL", "111111-1111", "1234556Jj!", roles)
-		users.add()
+		List<String> roles = new ArrayList<String>();
 
-		
-		
-		
-		Assert.assertNotNull(this.aw4);
+		roles.add("Admin");
 
-		// Tests to see if this is a valid instance of Labor Camp.
-		Assert.assertTrue(this.aw1 instanceof LaborCamp);
-		Assert.assertTrue(this.aw2 instanceof LaborCamp);
-		Assert.assertTrue(this.aw3 instanceof LaborCamp);
-		Assert.assertTrue(this.aw4 instanceof LaborCamp);
+		UserDTO user1 = new UserDTO(15, "djiasof adsf", "dsf2", "111111-1111", "dsafadf", roles);
+
+		users.add(user1);
+		saveInfo();
+		List<UserDTO> tempUsers = users;
+		users = null; 
+		loadInfo();
+	
+		Assert.assertEquals(tempUsers, users);
+
 	}
 
 	public void saveInfo() {
