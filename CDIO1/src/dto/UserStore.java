@@ -205,6 +205,18 @@ public class UserStore implements IUserDAO {
 			throw new InvalidUserNameException("Wrong name");
 
 		String tempIni = user.getIni();
+		/*
+		 * tempIni.matches(".*\\d+.*") ---------------------------- To explain:
+		 * .* means any character from 0 to infinite occurence, than the \\d+
+		 * (double backslash I think is just to escape the second backslash) and
+		 * \d+ means a digit from 1 time to infinite.
+		 */
+		if (tempIni.matches(".*\\d+.*")) {
+			throw new InvalidINIException("Wrong Initial");
+		}
+		if (tempIni.length() < 2 || tempIni.length() > 4) {
+			throw new InvalidINIException("Wrong Initial");
+		}
 
 		for (int i = 0; i < users.size(); i++) {
 			if (tempIni.equals(users.get(i).getIni()))
@@ -228,10 +240,23 @@ public class UserStore implements IUserDAO {
 
 		String tempName = user.getUserName();
 
-		if (tempName.length() > 20 && tempName.length() < 2)
+		if (tempName.length() > 20 || tempName.length() < 2)
 			throw new InvalidUserNameException("Wrong name");
 
 		String tempIni = user.getIni();
+
+		/*
+		 * tempIni.matches(".*\\d+.*") ---------------------------- To explain:
+		 * .* means any character from 0 to infinite occurence, than the \\d+
+		 * (double backslash I think is just to escape the second backslash) and
+		 * \d+ means a digit from 1 time to infinite.
+		 */
+		if (tempIni.matches(".*\\d+.*")) {
+			throw new InvalidINIException("Wrong Initial");
+		}
+		if (tempIni.length() < 2 || tempIni.length() > 4) {
+			throw new InvalidINIException("Wrong Initial");
+		}
 
 		for (int i = 0; i < users.size(); i++) {
 			if (tempIni.equals(users.get(i).getIni()))
