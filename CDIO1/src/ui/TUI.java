@@ -9,6 +9,9 @@ import exceptions.DALException;
 import exceptions.DatabaseFullException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
+import exceptions.InvalidINIException;
+import exceptions.InvalidUserNameException;
+import exceptions.NoRoleException;
 import logic.ILogic;
 
 public class TUI {
@@ -118,19 +121,81 @@ public class TUI {
 				break;
 		}
 		UserDTO temp = new UserDTO(userID, userName, initials, cpr, null, roles);
+		sendUser(temp);
+	}
+	private void sendUser(UserDTO temp){
 		try {
 			f.createUser(temp);
-			System.out.println(f.getUser(userID));
+			System.out.println(f.getUser(temp.getUserID()));
+		} catch (DatabaseFullException e) {
+			System.out.println("The database is full. Delete a user before entering a new one.");
 		} catch (InvalidIDException e) {
-			System.out.println("You have entered an illegal id");
 			System.out.println(e.toString());
+			System.out.println("Please enter an ID between 11-99");
 			temp.setUserId(input.nextInt());
 			input.nextLine();
+			sendUser(temp);
 		} catch (InvalidCPRException e) {
 			System.out.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
-		} catch (DatabaseFullException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			temp.setCpr(input.nextLine());
+			sendUser(temp);
+		}catch(InvalidINIException e){
+			System.out.println("You have entered invalid initials.\nPlease enter some new ones.");
+			temp.setIni(input.nextLine());
+			sendUser(temp);
+		}catch(InvalidUserNameException e ){
+			System.out.println(e);
+			System.out.println("Enter a new username");
+			temp.setUserName(input.nextLine());
+			sendUser(temp);
+		}catch(NoRoleException e){
+			System.out.println(e);
+			List<String> roles = new ArrayList<String>();
+			List<String> choices = new ArrayList<String>();
+			choices.add("1.\tAdmin");
+			choices.add("2.\tPharmacist");
+			choices.add("3.\tForeman");
+			choices.add("4.\tOperator");
+			choices.add("5.\tRole selection done");
+			while (true) {
+				for (int i = 0; i < roles.size(); i++) {
+					if (roles.get(i) == "Admin")
+						choices.remove("1.\tAdmin");
+					else if (roles.get(i) == "Pharmacist")
+						choices.remove("2.\tPharmacist");
+					else if (roles.get(i) == "Foreman")
+						choices.remove("3.\tForeman");
+					else if (roles.get(i) == "Operator")
+						choices.remove("4.\tOperator");
+				}
+				System.out.println("Choose a role to add to the new user:");
+				for (int i = 0; i < choices.size(); i++)
+					System.out.println(choices.get(i));
+				int choice = input.nextInt();
+				input.nextLine();
+				switch (choice) {
+				case 1:
+					roles.add("Admin");
+					break;
+				case 2:
+					roles.add("Pharmacist");
+					break;
+				case 3:
+					roles.add("Foreman");
+					break;
+				case 4:
+					roles.add("Operator");
+					break;
+				default:
+					if (choice == 5)
+						break;
+					System.out.println("Invalid input. Enter 1-5.");
+				}
+				if (choice == 5)
+					break;
+			}
+			temp.setRoles(roles);
+			sendUser(temp);
 		}catch(DALException e){
 			e.printStackTrace();
 		}

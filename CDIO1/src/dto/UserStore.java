@@ -29,6 +29,11 @@ import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
 import exceptions.InvalidPasswordException;
+import exceptions.UserNotFoundException;
+
+import exceptions.DatabaseFullException;
+import exceptions.InvalidUserNameException;
+
 import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
 import exceptions.UserNotFoundException;
@@ -36,36 +41,32 @@ import exceptions.UserNotFoundException;
 public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
-	
+
 	private final String ULetter  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // Upper case
-    private final String Lletter   = "abcdefghijklmnopqrstuvwxyz"; // Lower case
-    private final String Number     = "0123456789";
-    private final String SChars   = "!@#$%^&*_=+-/";
-    private final int noOfBLetter = 1; // How many Uppercase letters
-    private final int noOfNumbers = 1; // How many numbers
-    private final int noOfSChars = 1;   // How many special chars
-    private final int min = 9;  // Min lenght
-    private final int max = 12; // Max lenght
-    
-   private String pathName = "UserInfo.ser";
-    
+	private final String Lletter   = "abcdefghijklmnopqrstuvwxyz"; // Lower case
+	private final String Number     = "0123456789";
+	private final String SChars   = "!@#$%^&*_=+-/";
+	private final int noOfBLetter = 1; // How many Uppercase letters
+	private final int noOfNumbers = 1; // How many numbers
+	private final int noOfSChars = 1;   // How many special chars
+	private final int min = 9;  // Min lenght
+	private final int max = 12; // Max lenght
+
+
+	private String pathName = "UserInfo.ser";
+
 
 	public UserStore() {
 
 	}
-	// Test Mode.
-	
-	public UserStore(String pathName){
-		this.pathName= pathName;
-	}
 
 	@SuppressWarnings("unchecked")
 	public void loadInfo() {
-		
+
 		try {
-			InputStream file = new FileInputStream(pathName);
-		      InputStream buffer = new BufferedInputStream(file);
-		      ObjectInput input = new ObjectInputStream (buffer);
+			InputStream file = new FileInputStream("UserInfo.ser");
+			InputStream buffer = new BufferedInputStream(file);
+			ObjectInput input = new ObjectInputStream (buffer);
 			//ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
 			users = (ArrayList<UserDTO>) input.readObject();
 			input.close();
@@ -85,9 +86,9 @@ public class UserStore implements IUserDAO {
 
 	public void saveInfo() {
 		try {
-		    OutputStream file = new FileOutputStream(pathName);
-		    OutputStream buffer = new BufferedOutputStream(file);
-		    ObjectOutput output = new ObjectOutputStream(buffer);
+			OutputStream file = new FileOutputStream("UserInfo.ser");
+			OutputStream buffer = new BufferedOutputStream(file);
+			ObjectOutput output = new ObjectOutputStream(buffer);
 			//ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("UserInfo.ser")));
 			output.writeObject(users);
 			// close the writing.
@@ -97,16 +98,12 @@ public class UserStore implements IUserDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
-
-		if (users.size() == 0) {
-			throw new EmptyStoreException("Empty Store");
-		}
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == userId) {
 				return users.get(i);
@@ -118,10 +115,6 @@ public class UserStore implements IUserDAO {
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
 		loadInfo();
-
-		if (users.size() == 0) {
-			throw new EmptyStoreException("Empty Store");
-		}
 		return users;
 
 	}
@@ -130,7 +123,10 @@ public class UserStore implements IUserDAO {
 	public void createUser(UserDTO user) throws DALException {
 
 		loadInfo();
-		if (users.size() == 88) {
+
+		user.setPassword(pwg());
+
+		if(users.size()==88){
 			throw new DatabaseFullException("Database is full");
 		}
 		checkUser(user);
@@ -141,30 +137,19 @@ public class UserStore implements IUserDAO {
 	@Override
 	public void updateUser(UserDTO user) throws DALException {
 		checkUser(user);
-		boolean updateUserStatus = false;
 		loadInfo();
-		if(users.size()==0){
-			throw new EmptyStoreException("Empty Store");
-		}
 		for(int i=0;i<users.size();i++){
 			if(user.getUserID()==users.get(i).getUserID()){
 				users.remove(i);
 				users.add(user);
-				updateUserStatus = true;
 			}
 		}
-		if(updateUserStatus == false)
-			throw new UserNotFoundException("No user has been found with id: " + user.getUserID());
-		
 		saveInfo();
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DALException {
 		loadInfo();
-		if(users.size()==0){
-			throw new EmptyStoreException("Empty Store");
-		}
 		boolean found=false;
 		int index=0;
 		for(int i=0;i<users.size();i++){
@@ -233,13 +218,13 @@ public class UserStore implements IUserDAO {
 		if (checkCpr(tempCPR) == false) {
 			throw new InvalidCPRException("Wrong CPR");
 		}
-		
+
 		List<String> tempRoles = user.getRoles();
-		
+
 		if(tempRoles.size()==0)
 			throw new NoRoleException("Choose a role");
 		checkPsw(user.getPassword());
-		
+
 	}
 	private void checkPsw(String password) throws DALException{
 		if(password.length()>max){
@@ -267,44 +252,44 @@ public class UserStore implements IUserDAO {
 		if(noDigits<noOfNumbers){
 			throw new InvalidPasswordException("Password must contain at least"+noOfNumbers +"digits");
 		}
-		
+
 	}
-	
+
 	private String pwg () {
-		
+
 		Random random = new Random();
-        int lenght = random.nextInt(max - min + 1) + min;
-        char[] password = new char[lenght];
-        int index = 0;
-        for (int i = 0; i < noOfBLetter; i++) {
-            index = getNI(random, lenght, password);
-            password[index] = ULetter.charAt(random.nextInt(ULetter.length()));
-        }
-        for (int i = 0; i < noOfNumbers; i++) {
-            index = getNI(random, lenght, password);
-            password[index] = Number.charAt(random.nextInt(Number.length()));
-        }
-        for (int i = 0; i < noOfSChars; i++) {
-            index = getNI(random, lenght, password);
-            password[index] = SChars.charAt(random.nextInt(SChars.length()));
-        }
-        for(int i = 0; i < lenght; i++) {
-            if(password[i] == 0) {
-                password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
-            }
-        }
-        String returnString="";
-        for(int i = 0 ; i < password.length ; i++ ){
-        	returnString+=password[i];
-        }
-        return returnString;
-		
+		int lenght = random.nextInt(max - min + 1) + min;
+		char[] password = new char[lenght];
+		int index = 0;
+		for (int i = 0; i < noOfBLetter; i++) {
+			index = getNI(random, lenght, password);
+			password[index] = ULetter.charAt(random.nextInt(ULetter.length()));
+		}
+		for (int i = 0; i < noOfNumbers; i++) {
+			index = getNI(random, lenght, password);
+			password[index] = Number.charAt(random.nextInt(Number.length()));
+		}
+		for (int i = 0; i < noOfSChars; i++) {
+			index = getNI(random, lenght, password);
+			password[index] = SChars.charAt(random.nextInt(SChars.length()));
+		}
+		for(int i = 0; i < lenght; i++) {
+			if(password[i] == 0) {
+				password[i] = Lletter.charAt(random.nextInt(Lletter.length()));
+			}
+		}
+		String returnString="";
+		for(int i = 0 ; i < password.length ; i++ ){
+			returnString+=password[i];
+		}
+		return returnString;
+
 	}
-	
+
 	private int getNI(Random random, int lenght, char[] password) {
-        int index = random.nextInt(lenght);
-        
-        while(password[index = random.nextInt(lenght)] != 0);
-        return index;
-    }
+		int index = random.nextInt(lenght);
+
+		while(password[index = random.nextInt(lenght)] != 0);
+		return index;
+	}
 }
