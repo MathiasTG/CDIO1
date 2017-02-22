@@ -7,6 +7,7 @@ import java.util.Scanner;
 import dto.UserDTO;
 import exceptions.DALException;
 import exceptions.DatabaseFullException;
+import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
@@ -71,7 +72,7 @@ public class TUI {
 			System.out.println("Enter the ID of the new user, as an integer between 11 and 99:");
 			userID = input.nextInt();
 			input.nextLine();
-			if(userID>=11||userID<=99)
+			if(userID>=11&&userID<=99)
 				break;
 			else
 				System.out.println(userID+" is not a valid ID.");
@@ -198,21 +199,90 @@ public class TUI {
 			}
 			temp.setRoles(roles);
 			sendUser(temp);
-		}catch(InvalidPasswordException e){
-			System.out.println(e.getMessage());
-			System.out.println("Please enter a new password with the correct parameters.");
-			temp.setPassword(input.nextLine());
-			sendUser(temp);
 		}catch(DALException e){
 			e.printStackTrace();
 		}
 	}
+	public void updateUserTUI(UserDTO temp){
+			try {
+				f.updateUser(temp);
+				System.out.println(f.getUser(temp.getUserID()));
+			} catch (InvalidCPRException e) {
+				System.out.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
+				temp.setCpr(input.nextLine());
+				sendUser(temp);
+			}catch(InvalidINIException e){
+				System.out.println("You have entered invalid initials.\nPlease enter some new ones.");
+				temp.setIni(input.nextLine());
+				sendUser(temp);
+			}catch(InvalidUserNameException e ){
+				System.out.println(e.getMessage());
+				System.out.println("Enter a new username");
+				temp.setUserName(input.nextLine());
+				sendUser(temp);
+			}catch(NoRoleException e){
+				System.out.println(e);
+				List<String> roles = new ArrayList<String>();
+				List<String> choices = new ArrayList<String>();
+				choices.add("1.\tAdmin");
+				choices.add("2.\tPharmacist");
+				choices.add("3.\tForeman");
+				choices.add("4.\tOperator");
+				choices.add("5.\tRole selection done");
+				while (true) {
+					for (int i = 0; i < roles.size(); i++) {
+						if (roles.get(i) == "Admin")
+							choices.remove("1.\tAdmin");
+						else if (roles.get(i) == "Pharmacist")
+							choices.remove("2.\tPharmacist");
+						else if (roles.get(i) == "Foreman")
+							choices.remove("3.\tForeman");
+						else if (roles.get(i) == "Operator")
+							choices.remove("4.\tOperator");
+					}
+					System.out.println("Choose a role to add to the new user:");
+					for (int i = 0; i < choices.size(); i++)
+						System.out.println(choices.get(i));
+					int choice = input.nextInt();
+					input.nextLine();
+					switch (choice) {
+					case 1:
+						roles.add("Admin");
+						break;
+					case 2:
+						roles.add("Pharmacist");
+						break;
+					case 3:
+						roles.add("Foreman");
+						break;
+					case 4:
+						roles.add("Operator");
+						break;
+					default:
+						if (choice == 5)
+							break;
+						System.out.println("Invalid input. Enter 1-5.");
+					}
+					if (choice == 5)
+						break;
+				}
+				temp.setRoles(roles);
+				sendUser(temp);
+			}catch(InvalidPasswordException e){
+				System.out.println(e.getMessage());
+				System.out.println("Please enter a new password with the correct parameters.");
+				temp.setPassword(input.nextLine());
+				sendUser(temp);
+			}catch(DALException e){
+				e.printStackTrace();
+			}
+		}
 
 	public void showAllUsers() {
 		try {
 			List<UserDTO> users = f.getUserList();
 			for (int i = 0; i < users.size(); i++)
-				System.out.println("User " + i + 1 + "\n" + users.get(i).toString());
+				System.out.println("User " + (i + 1) + "\n" + users.get(i).toString());
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -373,13 +443,15 @@ public class TUI {
 					break;
 				}
 			}
-		} catch(UserNotFoundException e){
+		}catch(EmptyStoreException e){
+			System.out.println(e.getMessage());
+		}catch(UserNotFoundException e){
 			System.out.println("No user was found with that ID.");
 		}catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		sendUser(temp);
+		updateUserTUI(temp);
 	}
 
 	public void deleteUser() {
