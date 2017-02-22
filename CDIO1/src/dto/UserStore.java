@@ -16,25 +16,22 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-//import java.util.Scanner;
 import java.util.Random;
-
-
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.DatabaseFullException;
 import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
 import exceptions.InvalidPasswordException;
-import exceptions.UserNotFoundException;
-import exceptions.DatabaseFullException;
 import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
+import exceptions.UserNotFoundException;
 
 public class UserStore implements IUserDAO {
 
