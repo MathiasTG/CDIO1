@@ -64,7 +64,7 @@ public class UserDTO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "User ID:	" + userID +"\n"+"Username:	" + userName + "\n"+ "Initials:	" + ini + "\n"+"Role:		" + roles + "\n"+"CPR:		"+cpr+"\n"+"Password:	"+password + "\n \n";
+		return "User ID:	" + userID +"\n"+"Username:	" + userName + "\n"+ "Initials:	" + ini + "\n"+"Role(s):		" + roles + "\n"+"CPR:		"+cpr+"\n"+"Password:	"+password + "\n \n";
 	}
 
 	public String getCpr() {
