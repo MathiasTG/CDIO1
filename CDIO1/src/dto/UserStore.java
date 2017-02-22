@@ -3,7 +3,7 @@ package dto;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
-import java.io.File;
+//import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,16 +16,15 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Random;
-
-
 
 import dal.IUserDAO;
 import exceptions.DALException;
+import exceptions.DatabaseFullException;
+import exceptions.EmptyStoreException;
 import exceptions.InvalidCPRException;
 import exceptions.InvalidIDException;
 import exceptions.InvalidINIException;
@@ -33,8 +32,11 @@ import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
 
 import exceptions.DatabaseFullException;
-import exceptions.invalidUserNameException;
+import exceptions.InvalidUserNameException;
+
+import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
+import exceptions.UserNotFoundException;
 
 public class UserStore implements IUserDAO {
 
@@ -203,7 +205,7 @@ public class UserStore implements IUserDAO {
 		String tempName = user.getUserName();
 
 		if (tempName.length() > 20 && tempName.length() < 2)
-			throw new invalidUserNameException("Wrong name");
+			throw new InvalidUserNameException("Wrong name");
 
 		String tempIni = user.getIni();
 
