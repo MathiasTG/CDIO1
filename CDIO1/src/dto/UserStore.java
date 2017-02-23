@@ -214,8 +214,8 @@ public class UserStore implements IUserDAO {
 		}
 		String tempName = user.getUserName();
 
-		if (tempName.length() > 20 && tempName.length() < 2)
-			throw new InvalidUserNameException("Wrong name");
+		if (tempName.length() > 20 || tempName.length() < 2)
+			throw new InvalidUserNameException("Username length must be between 2 and 20 characters");
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserName().equals(user.getUserName()))
 				throw new InvalidUserNameException("Username already taken.");
@@ -265,7 +265,7 @@ public class UserStore implements IUserDAO {
 		String tempName = user.getUserName();
 
 		if (tempName.length() > 20 || tempName.length() < 2)
-			throw new InvalidUserNameException("Wrong name");
+			throw new InvalidUserNameException("Username length must be between 2 and 20 characters");
 
 		String tempIni = user.getIni();
 
