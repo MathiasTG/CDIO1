@@ -300,7 +300,6 @@ public class TUI {
 		} catch (EmptyStoreException e) {
 			System.out.println(e.getMessage());
 		} catch (DALException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -465,16 +464,16 @@ public class TUI {
 					break;
 				}
 			}
+			updateUserTUI(temp);
 		} catch (EmptyStoreException e) {
 			System.out.println(e.getMessage());
 		} catch (UserNotFoundException e) {
 			System.out.println("No user was found with that ID.");
 			updateUser();
 		} catch (DALException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		updateUserTUI(temp);
+
 	}
 
 	public void deleteUser() {

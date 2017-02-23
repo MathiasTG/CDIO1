@@ -110,6 +110,8 @@ public class UserStore implements IUserDAO {
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
+		if(users.size()==0)
+			throw new EmptyStoreException("The database is empty.");
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == userId) {
 				return users.get(i);
