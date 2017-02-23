@@ -178,35 +178,6 @@ public class UserStore implements IUserDAO {
 			throw new UserNotFoundException("No user was found with id: " + userId);
 	}
 
-	public boolean checkCpr(String cpr) throws InvalidCPRException {
-		Date date = null;
-		// First try and catch for "-" error
-		try {
-			String[] parts = cpr.split("-");
-			String dateNumber = parts[0]; //
-			String number = parts[1]; //
-
-			if (dateNumber.length() == 6 && number.length() == 4) {
-				try {
-					SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
-					date = sdf.parse(dateNumber);
-					if (!dateNumber.equals(sdf.format(date))) {
-						return false;
-					} else {
-						return true;
-					}
-				} catch (ParseException ex) {
-					return false;
-				}
-
-			} else
-				return false;
-
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return false;
-		}
-	}
-
 	public void checkUser(UserDTO user) throws DALException {
 
 		int tempID = user.getUserID();
@@ -311,7 +282,36 @@ public class UserStore implements IUserDAO {
 		checkPsw(user.getPassword());
 
 	}
+	
+	public boolean checkCpr(String cpr) throws InvalidCPRException {
+		Date date = null;
+		// First try and catch for "-" error
+		try {
+			String[] parts = cpr.split("-");
+			String dateNumber = parts[0]; //
+			String number = parts[1]; //
 
+			if (dateNumber.length() == 6 && number.length() == 4) {
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+					date = sdf.parse(dateNumber);
+					if (!dateNumber.equals(sdf.format(date))) {
+						return false;
+					} else {
+						return true;
+					}
+				} catch (ParseException ex) {
+					return false;
+				}
+
+			} else
+				return false;
+
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return false;
+		}
+	}
+	
 	private void checkPsw(String password) throws DALException {
 		if (password.length() > max) {
 			throw new InvalidPasswordException("Password too long");
