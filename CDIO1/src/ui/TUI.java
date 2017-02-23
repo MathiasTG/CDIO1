@@ -56,7 +56,6 @@ public class TUI {
 			}
 		}
 	}
-
 	public void createUser() {
 		String userName, initials, cpr;
 		int userID;
@@ -133,165 +132,8 @@ public class TUI {
 				break;
 		}
 		UserDTO temp = new UserDTO(userID, userName, initials, cpr, null, roles);
-		sendUser(temp);
+		sendNewUser(temp);
 	}
-
-	private void sendUser(UserDTO temp) {
-		try {
-			f.createUser(temp);
-			System.out.println(f.getUser(temp.getUserID()));
-		} catch (DatabaseFullException e) {
-			System.out.println("The database is full. Delete a user before entering a new one.");
-		} catch (InvalidIDException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Please enter an ID between 11-99");
-			temp.setUserId(input.nextInt());
-			input.nextLine();
-			sendUser(temp);
-		} catch (InvalidCPRException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Please enter a correct one, in the form (123456-7890).\n");
-			temp.setCpr(input.nextLine());
-			sendUser(temp);
-		} catch (InvalidINIException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Please enter 2 - 4 letters.");
-			temp.setIni(input.nextLine());
-			sendUser(temp);
-		} catch (InvalidUserNameException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Enter a new username");
-			temp.setUserName(input.nextLine());
-			sendUser(temp);
-		} catch (NoRoleException e) {
-			System.out.println(e.getMessage());
-			List<String> roles = new ArrayList<String>();
-			List<String> choices = new ArrayList<String>();
-			choices.add("1.\tAdmin");
-			choices.add("2.\tPharmacist");
-			choices.add("3.\tForeman");
-			choices.add("4.\tOperator");
-			choices.add("5.\tRole selection done");
-			while (true) {
-				for (int i = 0; i < roles.size(); i++) {
-					if (roles.get(i) == "Admin")
-						choices.remove("1.\tAdmin");
-					else if (roles.get(i) == "Pharmacist")
-						choices.remove("2.\tPharmacist");
-					else if (roles.get(i) == "Foreman")
-						choices.remove("3.\tForeman");
-					else if (roles.get(i) == "Operator")
-						choices.remove("4.\tOperator");
-				}
-				System.out.println("Choose a role to add to the new user:");
-				for (int i = 0; i < choices.size(); i++)
-					System.out.println(choices.get(i));
-				int choice = input.nextInt();
-				input.nextLine();
-				switch (choice) {
-				case 1:
-					roles.add("Admin");
-					break;
-				case 2:
-					roles.add("Pharmacist");
-					break;
-				case 3:
-					roles.add("Foreman");
-					break;
-				case 4:
-					roles.add("Operator");
-					break;
-				default:
-					if (choice == 5)
-						break;
-					System.out.println("Invalid input. Enter 1-5.");
-				}
-				if (choice == 5)
-					break;
-			}
-			temp.setRoles(roles);
-			sendUser(temp);
-		} catch (DALException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateUserTUI(UserDTO temp) {
-		try {
-			f.updateUser(temp);
-			System.out.println(f.getUser(temp.getUserID()));
-		} catch (InvalidCPRException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Please enter a correct one, in the form (123456-7890).\n");
-			temp.setCpr(input.nextLine());
-			updateUserTUI(temp);
-		} catch (InvalidINIException e) {
-			System.out.println("You have entered invalid initials.\nPlease enter some new ones.");
-			temp.setIni(input.nextLine());
-			updateUserTUI(temp);
-		} catch (InvalidUserNameException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Enter a new username");
-			temp.setUserName(input.nextLine());
-			updateUserTUI(temp);
-		} catch (NoRoleException e) {
-			System.out.println(e.getMessage());
-			List<String> roles = new ArrayList<String>();
-			List<String> choices = new ArrayList<String>();
-			choices.add("1.\tAdmin");
-			choices.add("2.\tPharmacist");
-			choices.add("3.\tForeman");
-			choices.add("4.\tOperator");
-			choices.add("5.\tRole selection done");
-			while (true) {
-				for (int i = 0; i < roles.size(); i++) {
-					if (roles.get(i) == "Admin")
-						choices.remove("1.\tAdmin");
-					else if (roles.get(i) == "Pharmacist")
-						choices.remove("2.\tPharmacist");
-					else if (roles.get(i) == "Foreman")
-						choices.remove("3.\tForeman");
-					else if (roles.get(i) == "Operator")
-						choices.remove("4.\tOperator");
-				}
-				System.out.println("Choose a role to add to the new user:");
-				for (int i = 0; i < choices.size(); i++)
-					System.out.println(choices.get(i));
-				int choice = input.nextInt();
-				input.nextLine();
-				switch (choice) {
-				case 1:
-					roles.add("Admin");
-					break;
-				case 2:
-					roles.add("Pharmacist");
-					break;
-				case 3:
-					roles.add("Foreman");
-					break;
-				case 4:
-					roles.add("Operator");
-					break;
-				default:
-					if (choice == 5)
-						break;
-					System.out.println("Invalid input. Enter 1-5.");
-				}
-				if (choice == 5)
-					break;
-			}
-			temp.setRoles(roles);
-			updateUserTUI(temp);
-		} catch (InvalidPasswordException e) {
-			System.out.println(e.getMessage());
-			System.out.println("Please enter a new password with the correct parameters.");
-			temp.setPassword(input.nextLine());
-			updateUserTUI(temp);
-		} catch (DALException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void showAllUsers() {
 		try {
 			List<UserDTO> users = f.getUserList();
@@ -303,7 +145,6 @@ public class TUI {
 			e.printStackTrace();
 		}
 	}
-
 	public void updateUser() {
 
 		System.out.println("Enter the ID of the user you want to update: ");
@@ -464,7 +305,7 @@ public class TUI {
 					break;
 				}
 			}
-			updateUserTUI(temp);
+			sendUpdatedUser(temp);
 		} catch (EmptyStoreException e) {
 			System.out.println(e.getMessage());
 		} catch (UserNotFoundException e) {
@@ -475,7 +316,6 @@ public class TUI {
 		}
 
 	}
-
 	public void deleteUser() {
 		System.out.println("Enter the ID of the user you want to delete.\nEnter 0 to cancel");
 		int id = input.nextInt();
@@ -490,6 +330,160 @@ public class TUI {
 			} catch (DALException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	public void sendUpdatedUser(UserDTO temp) {
+		try {
+			f.updateUser(temp);
+			System.out.println(f.getUser(temp.getUserID()));
+		} catch (InvalidCPRException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Please enter a correct one, in the form (123456-7890).\n");
+			temp.setCpr(input.nextLine());
+			sendUpdatedUser(temp);
+		} catch (InvalidINIException e) {
+			System.out.println("You have entered invalid initials.\nPlease enter some new ones.");
+			temp.setIni(input.nextLine());
+			sendUpdatedUser(temp);
+		} catch (InvalidUserNameException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Enter a new username");
+			temp.setUserName(input.nextLine());
+			sendUpdatedUser(temp);
+		} catch (NoRoleException e) {
+			System.out.println(e.getMessage());
+			List<String> roles = new ArrayList<String>();
+			List<String> choices = new ArrayList<String>();
+			choices.add("1.\tAdmin");
+			choices.add("2.\tPharmacist");
+			choices.add("3.\tForeman");
+			choices.add("4.\tOperator");
+			choices.add("5.\tRole selection done");
+			while (true) {
+				for (int i = 0; i < roles.size(); i++) {
+					if (roles.get(i) == "Admin")
+						choices.remove("1.\tAdmin");
+					else if (roles.get(i) == "Pharmacist")
+						choices.remove("2.\tPharmacist");
+					else if (roles.get(i) == "Foreman")
+						choices.remove("3.\tForeman");
+					else if (roles.get(i) == "Operator")
+						choices.remove("4.\tOperator");
+				}
+				System.out.println("Choose a role to add to the new user:");
+				for (int i = 0; i < choices.size(); i++)
+					System.out.println(choices.get(i));
+				int choice = input.nextInt();
+				input.nextLine();
+				switch (choice) {
+				case 1:
+					roles.add("Admin");
+					break;
+				case 2:
+					roles.add("Pharmacist");
+					break;
+				case 3:
+					roles.add("Foreman");
+					break;
+				case 4:
+					roles.add("Operator");
+					break;
+				default:
+					if (choice == 5)
+						break;
+					System.out.println("Invalid input. Enter 1-5.");
+				}
+				if (choice == 5)
+					break;
+			}
+			temp.setRoles(roles);
+			sendUpdatedUser(temp);
+		} catch (InvalidPasswordException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Please enter a new password with the correct parameters.");
+			temp.setPassword(input.nextLine());
+			sendUpdatedUser(temp);
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
+	}
+	private void sendNewUser(UserDTO temp) {
+		try {
+			f.createUser(temp);
+			System.out.println(f.getUser(temp.getUserID()));
+		} catch (DatabaseFullException e) {
+			System.out.println("The database is full. Delete a user before entering a new one.");
+		} catch (InvalidIDException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Please enter an ID between 11-99");
+			temp.setUserId(input.nextInt());
+			input.nextLine();
+			sendNewUser(temp);
+		} catch (InvalidCPRException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Please enter a correct one, in the form (123456-7890).\n");
+			temp.setCpr(input.nextLine());
+			sendNewUser(temp);
+		} catch (InvalidINIException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Please enter 2 - 4 letters.");
+			temp.setIni(input.nextLine());
+			sendNewUser(temp);
+		} catch (InvalidUserNameException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Enter a new username");
+			temp.setUserName(input.nextLine());
+			sendNewUser(temp);
+		} catch (NoRoleException e) {
+			System.out.println(e.getMessage());
+			List<String> roles = new ArrayList<String>();
+			List<String> choices = new ArrayList<String>();
+			choices.add("1.\tAdmin");
+			choices.add("2.\tPharmacist");
+			choices.add("3.\tForeman");
+			choices.add("4.\tOperator");
+			choices.add("5.\tRole selection done");
+			while (true) {
+				for (int i = 0; i < roles.size(); i++) {
+					if (roles.get(i) == "Admin")
+						choices.remove("1.\tAdmin");
+					else if (roles.get(i) == "Pharmacist")
+						choices.remove("2.\tPharmacist");
+					else if (roles.get(i) == "Foreman")
+						choices.remove("3.\tForeman");
+					else if (roles.get(i) == "Operator")
+						choices.remove("4.\tOperator");
+				}
+				System.out.println("Choose a role to add to the new user:");
+				for (int i = 0; i < choices.size(); i++)
+					System.out.println(choices.get(i));
+				int choice = input.nextInt();
+				input.nextLine();
+				switch (choice) {
+				case 1:
+					roles.add("Admin");
+					break;
+				case 2:
+					roles.add("Pharmacist");
+					break;
+				case 3:
+					roles.add("Foreman");
+					break;
+				case 4:
+					roles.add("Operator");
+					break;
+				default:
+					if (choice == 5)
+						break;
+					System.out.println("Invalid input. Enter 1-5.");
+				}
+				if (choice == 5)
+					break;
+			}
+			temp.setRoles(roles);
+			sendNewUser(temp);
+		} catch (DALException e) {
+			e.printStackTrace();
 		}
 	}
 }

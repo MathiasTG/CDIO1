@@ -56,10 +56,13 @@ public class UserStore implements IUserDAO {
 	private final int min = 9; // Min lenght
 	private final int max = 12; // Max lenght
 
-	private String pathName = "UserInfo.ser";
+	private final String pathName;
 
 	public UserStore() {
-
+		pathName= "UserInfo.ser";
+	}
+	public UserStore(String pathName){
+		this.pathName=pathName;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -329,14 +332,14 @@ public class UserStore implements IUserDAO {
 			}
 		}
 		if (noOfCAPS < noOfBLetter) {
-			throw new InvalidPasswordException("Password must contain at least" + noOfBLetter + "upper case character");
+			throw new InvalidPasswordException("Password must contain at least " + noOfBLetter + " upper case character");
 		}
 		if (noSCHR < noOfSChars) {
 			throw new InvalidPasswordException(
-					"Password must contain at least" + noOfSChars + "special character [!@#$%^&*_=+-/]");
+					"Password must contain at least " + noOfSChars + " special character [!@#$%^&*_=+-/]");
 		}
 		if (noDigits < noOfNumbers) {
-			throw new InvalidPasswordException("Password must contain at least" + noOfNumbers + "digits");
+			throw new InvalidPasswordException("Password must contain at least " + noOfNumbers + " digits");
 		}
 
 	}
@@ -372,10 +375,10 @@ public class UserStore implements IUserDAO {
 
 	}
 
-	private int getNI(Random random, int lenght, char[] password) {
-		int index = random.nextInt(lenght);
+	private int getNI(Random random, int length, char[] password) {
+		int index = random.nextInt(length);
 
-		while (password[index = random.nextInt(lenght)] != 0)
+		while (password[index = random.nextInt(length)] != 0)
 			;
 		return index;
 	}
