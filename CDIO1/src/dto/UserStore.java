@@ -242,7 +242,7 @@ public class UserStore implements IUserDAO {
 		List<String> tempRoles = user.getRoles();
 
 		if (tempRoles.size() == 0)
-			throw new NoRoleException("Choose a role");
+			throw new NoRoleException("The user has no roles.");
 		checkPsw(user.getPassword());
 
 	}
@@ -284,7 +284,7 @@ public class UserStore implements IUserDAO {
 		List<String> tempRoles = user.getRoles();
 
 		if (tempRoles.size() == 0)
-			throw new NoRoleException("Choose a role");
+			throw new NoRoleException("The user has to have a role.");
 		checkPsw(user.getPassword());
 
 	}
