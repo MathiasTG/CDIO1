@@ -71,18 +71,18 @@ public class UserStore implements IUserDAO {
 			ObjectInput input = new ObjectInputStream(buffer);
 			// ois = new ObjectInputStream(new FileInputStream("UserInfo.ser"));
 			users = (ArrayList<UserDTO>) input.readObject();
-			if(users.equals(null))
-				users= new ArrayList<UserDTO>();
+			if (users.equals(null))
+				users = new ArrayList<UserDTO>();
 			input.close();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (EOFException e) {
 			users = new ArrayList<UserDTO>();
-		} catch(StreamCorruptedException e){
+		} catch (StreamCorruptedException e) {
 			System.out.println("The file is currupted.");
 			e.printStackTrace();
-		}catch (IOException e1) {
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -110,7 +110,7 @@ public class UserStore implements IUserDAO {
 	@Override
 	public UserDTO getUser(int userId) throws DALException {
 		loadInfo();
-		if(users.size()==0)
+		if (users.size() == 0)
 			throw new EmptyStoreException("The database is empty.");
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == userId) {
@@ -123,7 +123,7 @@ public class UserStore implements IUserDAO {
 	@Override
 	public List<UserDTO> getUserList() throws DALException {
 		loadInfo();
-		if(users.size()==0)
+		if (users.size() == 0)
 			throw new EmptyStoreException("There are no users in the database.");
 		return users;
 
@@ -178,11 +178,6 @@ public class UserStore implements IUserDAO {
 	public boolean checkCpr(String cpr) throws InvalidCPRException {
 		Date date = null;
 		// First try and catch for "-" error
-		for(int i =0;i<users.size();i++){
-			if(cpr.equals(users.get(i).getCpr())){
-				throw new InvalidCPRException("Invalid CPR number. This CPR number is already taken.");
-			}
-		}
 		try {
 			String[] parts = cpr.split("-");
 			String dateNumber = parts[0]; //
@@ -221,9 +216,9 @@ public class UserStore implements IUserDAO {
 
 		if (tempName.length() > 20 && tempName.length() < 2)
 			throw new InvalidUserNameException("Wrong name");
-		for(int i = 0;i<users.size();i++){
-			if(users.get(i).getUserName().equals(user.getUserName()))
-					throw new InvalidUserNameException("Username already taken.");
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).getUserName().equals(user.getUserName()))
+				throw new InvalidUserNameException("Username already taken.");
 		}
 
 		String tempIni = user.getIni();
@@ -248,6 +243,13 @@ public class UserStore implements IUserDAO {
 
 		if (checkCpr(tempCPR) == false) {
 			throw new InvalidCPRException("Wrong CPR");
+		}
+		for (int i = 0; i < users.size(); i++) {
+			if (!(user.getUserID() == users.get(i).getUserID())) {
+				if (user.getCpr().equals(users.get(i).getCpr())) {
+					throw new InvalidCPRException("Invalid CPR number. This CPR number is already taken.");
+				}
+			}
 		}
 
 		List<String> tempRoles = user.getRoles();
@@ -290,6 +292,13 @@ public class UserStore implements IUserDAO {
 
 		if (checkCpr(tempCPR) == false) {
 			throw new InvalidCPRException("Wrong CPR");
+		}
+		for (int i = 0; i < users.size(); i++) {
+			if (!(user.getUserID() == users.get(i).getUserID())) {
+				if (user.getCpr().equals(users.get(i).getCpr())) {
+					throw new InvalidCPRException("Invalid CPR number. This CPR number is already taken.");
+				}
+			}
 		}
 
 		List<String> tempRoles = user.getRoles();

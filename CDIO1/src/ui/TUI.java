@@ -149,8 +149,8 @@ public class TUI {
 			input.nextLine();
 			sendUser(temp);
 		} catch (InvalidCPRException e) {
-			System.out
-					.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
+			System.out.println(e.getMessage());
+			System.out.println("Please enter a correct one, in the form (123456-7890).\n");
 			temp.setCpr(input.nextLine());
 			sendUser(temp);
 		} catch (InvalidINIException e) {
@@ -221,8 +221,8 @@ public class TUI {
 			f.updateUser(temp);
 			System.out.println(f.getUser(temp.getUserID()));
 		} catch (InvalidCPRException e) {
-			System.out
-					.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
+			System.out.println(e.getMessage());
+			System.out.println("Please enter a correct one, in the form (123456-7890).\n");
 			temp.setCpr(input.nextLine());
 			updateUserTUI(temp);
 		} catch (InvalidINIException e) {
