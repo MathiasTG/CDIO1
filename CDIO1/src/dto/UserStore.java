@@ -173,9 +173,14 @@ public class UserStore implements IUserDAO {
 			throw new UserNotFoundException("No user was found with id: " + userId);
 	}
 
-	public boolean checkCpr(String cpr) {
+	public boolean checkCpr(String cpr) throws InvalidCPRException {
 		Date date = null;
 		// First try and catch for "-" error
+		for(int i =0;i<users.size();i++){
+			if(cpr.equals(users.get(i).getCpr())){
+				throw new InvalidCPRException("Invalid CPR number. This CPR number is already taken.");
+			}
+		}
 		try {
 			String[] parts = cpr.split("-");
 			String dateNumber = parts[0]; //
@@ -208,12 +213,16 @@ public class UserStore implements IUserDAO {
 
 		for (int i = 0; i < users.size(); i++) {
 			if (users.get(i).getUserID() == tempID)
-				throw new InvalidIDException("Wrong userID");
+				throw new InvalidIDException("UserID already taken.");
 		}
 		String tempName = user.getUserName();
 
 		if (tempName.length() > 20 && tempName.length() < 2)
 			throw new InvalidUserNameException("Wrong name");
+		for(int i = 0;i<users.size();i++){
+			if(users.get(i).getUserName().equals(user.getUserName()))
+					throw new InvalidUserNameException("Username already taken.");
+		}
 
 		String tempIni = user.getIni();
 		/*
@@ -231,7 +240,7 @@ public class UserStore implements IUserDAO {
 
 		for (int i = 0; i < users.size(); i++) {
 			if (tempIni.equals(users.get(i).getIni()))
-				throw new InvalidINIException("Wrong Initial");
+				throw new InvalidINIException("Initials already taken");
 		}
 		String tempCPR = user.getCpr();
 

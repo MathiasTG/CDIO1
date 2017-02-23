@@ -97,7 +97,7 @@ public class TUI {
 		while (true) {
 
 			for (int i = 0; i < roles.size(); i++) {
-				if (roles.get(i).equals( "Admin"))
+				if (roles.get(i).equals("Admin"))
 					choices.remove("1.\tAdmin");
 				else if (roles.get(i).equals("Pharmacist"))
 					choices.remove("2.\tPharmacist");
@@ -154,7 +154,8 @@ public class TUI {
 			temp.setCpr(input.nextLine());
 			sendUser(temp);
 		} catch (InvalidINIException e) {
-			System.out.println("You have entered invalid initials.\nPlease enter some new ones.");
+			System.out.println(e.getMessage());
+			System.out.println("Please enter 2 - 4 letters.");
 			temp.setIni(input.nextLine());
 			sendUser(temp);
 		} catch (InvalidUserNameException e) {
@@ -220,7 +221,8 @@ public class TUI {
 			f.updateUser(temp);
 			System.out.println(f.getUser(temp.getUserID()));
 		} catch (InvalidCPRException e) {
-			System.out.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
+			System.out
+					.println("You have entered a wrong CPR.\nPlease enter a correct one, in the form (123456-7890).\n");
 			temp.setCpr(input.nextLine());
 			updateUserTUI(temp);
 		} catch (InvalidINIException e) {
@@ -339,9 +341,10 @@ public class TUI {
 					temp.setPassword(input.nextLine());
 					break;
 				case 5:
-					System.out.println("Do you want to add or delete roles?\n1.\tAdd roles\n2.\tDelete roles\n3.\tCancel");
+					System.out.println(
+							"Do you want to add or delete roles?\n1.\tAdd roles\n2.\tDelete roles\n3.\tCancel");
 					int subchoice = input.nextInt();
-					int subsubchoice=0;
+					int subsubchoice = 0;
 					input.nextLine();
 					switch (subchoice) {
 					case 1:
@@ -354,7 +357,7 @@ public class TUI {
 						choices.add("5.\tRole selection done");
 						while (true) {
 							for (int i = 0; i < roles.size(); i++) {
-								if (roles.get(i).equals( "Admin"))
+								if (roles.get(i).equals("Admin"))
 									choices.remove("1.\tAdmin");
 								else if (roles.get(i).equals("Pharmacist"))
 									choices.remove("2.\tPharmacist");
@@ -366,7 +369,7 @@ public class TUI {
 							System.out.println("Choose a role to add to the user:");
 							for (int i = 0; i < choices.size(); i++)
 								System.out.println(choices.get(i));
-							subsubchoice= input.nextInt();
+							subsubchoice = input.nextInt();
 							input.nextLine();
 							switch (subsubchoice) {
 							case 1:
@@ -397,9 +400,9 @@ public class TUI {
 						List<String> roles2 = temp.getRoles();
 						List<String> choices2 = new ArrayList<String>();
 						while (true) {
-							choices2= new ArrayList<String>();
+							choices2 = new ArrayList<String>();
 							for (int i = 0; i < roles2.size(); i++) {
-								if (roles2.get(i).equals( "Admin"))
+								if (roles2.get(i).equals("Admin"))
 									choices2.add("1.\tAdmin");
 								else if (roles2.get(i).equals("Pharmacist"))
 									choices2.add("2.\tPharmacist");
@@ -449,7 +452,7 @@ public class TUI {
 					}
 					if (subchoice == 3) {
 						break;
-					}else if(subsubchoice==5)
+					} else if (subsubchoice == 5)
 						break;
 				default:
 					if (choice == 6) {
@@ -466,6 +469,7 @@ public class TUI {
 			System.out.println(e.getMessage());
 		} catch (UserNotFoundException e) {
 			System.out.println("No user was found with that ID.");
+			updateUser();
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -474,13 +478,19 @@ public class TUI {
 	}
 
 	public void deleteUser() {
-		System.out.println("Enter the ID of the user you want to delete: ");
+		System.out.println("Enter the ID of the user you want to delete.\nEnter 0 to cancel");
 		int id = input.nextInt();
 		input.nextLine();
-		try {
-			f.deleteUser(id);
-		} catch (DALException e) {
-			e.printStackTrace();
+		if (id != 0) {
+			try {
+				f.deleteUser(id);
+				System.out.println("UserID "+id+" deleted.");
+			} catch (UserNotFoundException e) {
+				System.out.println(e.getMessage());
+				deleteUser();
+			} catch (DALException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
