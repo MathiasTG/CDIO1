@@ -3,7 +3,7 @@ package dto;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
-import java.io.File;
+//import java.io.File;
 //import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,8 +16,8 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+//import java.nio.file.Files;
+//import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,12 +35,12 @@ import exceptions.InvalidINIException;
 import exceptions.InvalidPasswordException;
 import exceptions.UserNotFoundException;
 
-import exceptions.DatabaseFullException;
+//import exceptions.DatabaseFullException;
 import exceptions.InvalidUserNameException;
 
-import exceptions.InvalidUserNameException;
+//import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
-import exceptions.UserNotFoundException;
+//import exceptions.UserNotFoundException;
 
 public class UserStore implements IUserDAO {
 
