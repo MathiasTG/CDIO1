@@ -42,6 +42,8 @@ import exceptions.InvalidUserNameException;
 import exceptions.NoRoleException;
 //import exceptions.UserNotFoundException;
 
+// Dette er en test Jonas
+
 public class UserStore implements IUserDAO {
 
 	private List<UserDTO> users;
